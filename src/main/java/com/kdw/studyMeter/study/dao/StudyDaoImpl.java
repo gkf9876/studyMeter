@@ -17,18 +17,8 @@ import com.kdw.studyMeter.study.vo.StudyVo;
 public class StudyDaoImpl implements StudyDao{
 	private Connection conn = null;
 
-	public StudyDaoImpl(){
-		try {
-			Class.forName("org.sqlite.JDBC");
-			URL resource = getClass().getClassLoader().getResource("db");
-			String filePath = resource.getFile();
-			conn = DriverManager.getConnection("jdbc:sqlite:" + filePath);
-			
-			//conn = DriverManager.getConnection("jdbc:sqlite:D:\\Users\\gkf9876\\eclipse-workspace\\StudyMeter\\src\\main\\resources\\db");
-			//conn = DriverManager.getConnection("jdbc:sqlite:db");
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+	public StudyDaoImpl(Connection conn){
+		this.conn = conn;
 	}
 	
 	public List<StudyVo> select() {
@@ -36,7 +26,16 @@ public class StudyDaoImpl implements StudyDao{
 		
 		try {
 			Statement stat = conn.createStatement();
-			ResultSet rs = stat.executeQuery("SELECT * FROM TB_STUDY");
+			ResultSet rs = stat.executeQuery(""
+					+ "	SELECT "
+					+ "		SEQ"
+					+ "		, STUDY_NM"
+					+ "		, START_DATE"
+					+ "		, END_DATE"
+					+ "		, MEMO"
+					+ "		, ((STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60) AS STUDY_TIME"
+					+ "	FROM "
+					+ "		TB_STUDY");
 			while(rs.next()) {
 				StudyVo vo = new StudyVo();
 				vo.setSeq(rs.getInt("SEQ"));
@@ -76,11 +75,59 @@ public class StudyDaoImpl implements StudyDao{
 		
 		return result;
 	}
-
+	
+	public List<StudyVo> selectChart(int cnt) {
+		List<StudyVo> result = new ArrayList<StudyVo>();
+		
+		try {
+			Statement stat = conn.createStatement();
+			String sql = ""
+					+ "	SELECT"
+					+ "		DATE"
+					+ "		, STUDY_MIN"
+					+ "		, ROWNUMBER"
+					+ "	FROM ("
+					+ "		SELECT"
+					+ "			DATE"
+					+ "			, SUM(STUDY_MIN) AS STUDY_MIN"
+					+ "			, ROW_NUMBER() OVER(ORDER BY DATE DESC) ROWNUMBER"
+					+ "		FROM ("
+					+ "			SELECT"
+					+ "				ts.*"
+					+ "				, (STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60 AS STUDY_MIN"
+					+ "				, STRFTIME('%Y.%m.%d', START_DATE) DATE"
+					+ "			FROM"
+					+ "				TB_STUDY ts"
+					+ "		) A"
+					+ "		GROUP BY"
+					+ "			DATE"
+					+ "		ORDER BY"
+					+ "			DATE ASC"
+					+ "	)"
+					+ "	WHERE"
+					+ "		ROWNUMBER <= ?"
+					+ "";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cnt);
+			
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				StudyVo vo = new StudyVo();
+				vo.setDate(rs.getString("DATE"));
+				vo.setStudyMin(rs.getInt("STUDY_MIN"));
+				result.add(vo);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public int insert(StudyVo vo) {
 		int result = 0;
 		try {
-			String sql = "INSERT INTO TB_STUDY(STUDY_NM, START_DATE, MEMO) VALUES(?, DATETIME('now', 'localtime'), ?)";
+			String sql = "INSERT INTO TB_STUDY(STUDY_NM, START_DATE, END_DATE, MEMO) VALUES(?, DATETIME('now', 'localtime'), DATETIME('now', 'localtime'), ?)";
 			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, vo.getStudyNm());
 			pstmt.setString(2, vo.getMemo());
@@ -98,13 +145,19 @@ public class StudyDaoImpl implements StudyDao{
 	}
 
 	public int update(StudyVo vo) {
-		int result = 0;
+		int result = -1;
 		try {
-			Statement stat = conn.createStatement();
-			result = stat.executeUpdate("UPDATE TB_STUDY SET "
-					+ "END_DATE = DATETIME('now', 'localtime')"
-					+ "WHERE SEQ = "
-					+ vo.getSeq() + "");
+			String sql = ""
+					+ "	UPDATE "
+					+ "		TB_STUDY "
+					+ "	SET "
+					+ "		END_DATE = DATETIME('now', 'localtime')"
+					+ "	WHERE "
+					+ "		SEQ = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getSeq());
+			
+			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
