@@ -26,23 +26,29 @@ public class TodoDaoImpl implements TodoDao{
 			ResultSet rs = stat.executeQuery(""
 					+ "	SELECT "
 					+ "		SEQ"
+					+ "		, PARENT_SEQ"
+					+ "		, LEVEL"
 					+ "		, SUBJECT"
 					+ "		, USE_YN"
 					+ "		, CHECK_YN"
+					+ "		, ODR"
 					+ "		, CREATE_DATE"
 					+ "	FROM "
 					+ "		TB_TODO"
 					+ "	WHERE"
 					+ "		USE_YN = 'Y'"
 					+ "	ORDER BY"
-					+ "		CASE WHEN CHECK_YN = 'Y' THEN 1 ELSE 0 END ASC, SEQ ASC"
+					+ "		CASE WHEN CHECK_YN = 'Y' THEN 1 ELSE 0 END ASC, ODR ASC"
 					+ "");
 			while(rs.next()) {
 				TodoVo vo = new TodoVo();
 				vo.setSeq(rs.getInt("SEQ"));
+				vo.setParentSeq(rs.getInt("PARENT_SEQ"));
+				vo.setLevel(rs.getInt("LEVEL"));
 				vo.setSubject(rs.getString("SUBJECT"));
 				vo.setUseYn(rs.getString("USE_YN"));
 				vo.setCheckYn(rs.getString("CHECK_YN"));
+				vo.setOdr(rs.getInt("ODR"));
 				vo.setCreateDate(rs.getString("CREATE_DATE"));
 				result.add(vo);
 			}
@@ -61,10 +67,31 @@ public class TodoDaoImpl implements TodoDao{
 	public int insert(TodoVo vo) {
 		int result = 0;
 		try {
-			String sql = "INSERT INTO TB_TODO(SUBJECT, USE_YN, CHECK_YN, CREATE_DATE) VALUES(?, 'Y', ?, DATETIME('now', 'localtime'))";
+			String sql = ""
+					+ "	INSERT INTO "
+					+ "		TB_TODO("
+					+ "			PARENT_SEQ"
+					+ "			, LEVEL"
+					+ "			, SUBJECT"
+					+ "			, USE_YN"
+					+ "			, CHECK_YN"
+					+ "			, ODR"
+					+ "			, CREATE_DATE"
+					+ "		)VALUES("
+					+ "			?"
+					+ "			, ?"
+					+ "			, ?"
+					+ "			, 'Y'"
+					+ "			, ?"
+					+ "			, ?"
+					+ "			, DATETIME('now', 'localtime')"
+					+ "		)";
 			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, vo.getSubject());
-			pstmt.setString(2, vo.getCheckYn());
+			pstmt.setInt(1, vo.getParentSeq());
+			pstmt.setInt(2, vo.getLevel());
+			pstmt.setString(3, vo.getSubject());
+			pstmt.setString(4, vo.getCheckYn());
+			pstmt.setInt(5, vo.getOdr());
 			
 			pstmt.executeUpdate();
 			
@@ -88,13 +115,15 @@ public class TodoDaoImpl implements TodoDao{
 					+ "		SUBJECT = ?"
 					+ "		, CHECK_YN = ?"
 					+ "		, USE_YN = ?"
+					+ "		, ODR = ?"
 					+ "	WHERE "
 					+ "		SEQ = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getSubject());
 			pstmt.setString(2, vo.getCheckYn());
 			pstmt.setString(3, vo.getUseYn());
-			pstmt.setInt(4, vo.getSeq());
+			pstmt.setInt(4, vo.getOdr());
+			pstmt.setInt(5, vo.getSeq());
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

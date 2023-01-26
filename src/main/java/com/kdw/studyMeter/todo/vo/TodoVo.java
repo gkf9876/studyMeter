@@ -2,15 +2,30 @@ package com.kdw.studyMeter.todo.vo;
 
 public class TodoVo {
 	private int seq;
+	private int parentSeq;
+	private int level;
 	private String subject;
 	private String useYn;
 	private String checkYn;
+	private int odr;
 	private String createDate;
 	public int getSeq() {
 		return seq;
 	}
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+	public int getParentSeq() {
+		return parentSeq;
+	}
+	public void setParentSeq(int parentSeq) {
+		this.parentSeq = parentSeq;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	public String getSubject() {
 		return subject;
@@ -29,6 +44,12 @@ public class TodoVo {
 	}
 	public void setCheckYn(String checkYn) {
 		this.checkYn = checkYn;
+	}
+	public int getOdr() {
+		return odr;
+	}
+	public void setOdr(int odr) {
+		this.odr = odr;
 	}
 	public String getCreateDate() {
 		return createDate;

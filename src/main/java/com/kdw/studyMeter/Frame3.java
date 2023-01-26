@@ -2,6 +2,7 @@ package com.kdw.studyMeter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
 
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.vo.TodoVo;
@@ -26,26 +26,87 @@ public class Frame3 extends JFrame{
 	private JPanel panel1;
 	private JPanel panel11;
 	private JPanel panel12;
-	private JPanel panel;
 	
 	private List<JCheckBox> checkBoxList;
-	private JCheckBox checkBox;
 	
 	private List<JTextField> textFieldList;
-	private JTextField textField;
 	
 	private List<TodoVo> itmList;
 	
 	private JButton button1;
 	private JButton button2;
 	
-	private JButton button;
-	
 	private JScrollPane scrollPane1;
 	
 	private TodoService todoService;
 	
-	private int cnt = 0;
+	//빈 항목 추가하기
+	private JPanel addColumn(int parentSeq, final int level) {
+		JPanel panel = new JPanel();
+		TodoVo vo = new TodoVo();
+		vo.setSeq(-1);
+		vo.setParentSeq(parentSeq);
+		vo.setLevel(level);
+		itmList.add(vo);
+		
+		JCheckBox checkBox = new JCheckBox();
+		panel.add(checkBox);
+		checkBoxList.add(checkBox);
+
+		JTextField textField = new JTextField(40 - level * 2);
+		panel.add(textField);
+		textFieldList.add(textField);
+		
+		JButton button = new JButton("+");
+		button.setBorder(BorderFactory.createLineBorder(Color.black));
+		button.setPreferredSize(new Dimension(16, 16));
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Component[] comp = panel11.getComponents();
+				
+				for(int i=0; i<comp.length; i++) {
+					JPanel itm = (JPanel)comp[i];
+					JButton button = (JButton)itm.getComponents()[2];
+					
+					if(e.getSource() == button) {
+						JPanel panel = new JPanel();
+						JCheckBox checkBox = new JCheckBox();
+						panel.add(checkBox);
+
+						JTextField textField = new JTextField(40 - (level + 1) * 2);
+						panel.add(textField);
+						
+						button = new JButton("+");
+						button.setBorder(BorderFactory.createLineBorder(Color.black));
+						button.setPreferredSize(new Dimension(16, 16));
+						button.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
+						panel.add(button);
+						
+						panel11.add(panel, i + 1);
+						
+						checkBoxList.add(i + 1, checkBox);
+						textFieldList.add(i + 1, textField);
+						TodoVo vo = new TodoVo();
+						vo.setSeq(-1);
+						vo.setParentSeq(itmList.get(i).getSeq());
+						vo.setLevel(itmList.get(i).getLevel() + 1);
+						itmList.add(i + 1, vo);
+						break;
+					}
+				}
+				panel11.revalidate();
+				panel11.repaint();
+			}
+		});
+		panel.add(button);
+		
+		return panel;
+	}
 	
 	public Frame3(final TodoService todoService) {
 		this.setTitle("할일 목록");
@@ -67,43 +128,71 @@ public class Frame3 extends JFrame{
 
 		if(itmList != null && itmList.size() > 0) {
 			for(TodoVo vo : itmList) {
-				panel = new JPanel();
-				checkBox = new JCheckBox();
+				JPanel panel = new JPanel();
+				JCheckBox checkBox = new JCheckBox();
 				checkBox.setSelected(("Y".equals(vo.getCheckYn()))? true : false);
 				panel.add(checkBox);
 				checkBoxList.add(checkBox);
 
-				textField = new JTextField(38);
+				JTextField textField = new JTextField(40 - vo.getLevel() * 2);
 				textField.setText(vo.getSubject());
 				panel.add(textField);
 				textFieldList.add(textField);
 				
-				button = new JButton("+");
+				JButton button = new JButton("+");
 				button.setBorder(BorderFactory.createLineBorder(Color.black));
 				button.setPreferredSize(new Dimension(16, 16));
+				button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Component[] comp = panel11.getComponents();
+						
+						for(int i=0; i<comp.length; i++) {
+							JPanel itm = (JPanel)comp[i];
+							JButton button = (JButton)itm.getComponents()[2];
+							
+							if(e.getSource() == button) {
+								JPanel panel = new JPanel();
+								JCheckBox checkBox = new JCheckBox();
+								panel.add(checkBox);
+
+								JTextField textField = new JTextField(40 - (itmList.get(i).getLevel() + 1) * 2);
+								panel.add(textField);
+								
+								button = new JButton("+");
+								button.setBorder(BorderFactory.createLineBorder(Color.black));
+								button.setPreferredSize(new Dimension(16, 16));
+								button.addActionListener(new ActionListener() {
+
+									public void actionPerformed(ActionEvent e) {
+										// TODO Auto-generated method stub
+										
+									}
+									
+								});
+								panel.add(button);
+								
+								panel11.add(panel, i + 1);
+								
+								checkBoxList.add(i + 1, checkBox);
+								textFieldList.add(i + 1, textField);
+								TodoVo vo = new TodoVo();
+								vo.setSeq(-1);
+								vo.setParentSeq(itmList.get(i).getSeq());
+								vo.setLevel(itmList.get(i).getLevel() + 1);
+								itmList.add(i + 1, vo);
+								break;
+							}
+						}
+						panel11.revalidate();
+						panel11.repaint();
+					}
+				});
 				panel.add(button);
 				
 				panel11.add(panel);
 			}
 		}else {
-			panel = new JPanel();
-			itmList = new ArrayList<TodoVo>();
-			itmList.add(new TodoVo());
-			
-			checkBox = new JCheckBox();
-			panel.add(checkBox);
-			checkBoxList.add(checkBox);
-
-			textField = new JTextField(38);
-			panel.add(textField);
-			textFieldList.add(textField);
-			
-			button = new JButton("+");
-			button.setBorder(BorderFactory.createLineBorder(Color.black));
-			button.setPreferredSize(new Dimension(16, 16));
-			panel.add(button);
-			
-			panel11.add(panel);
+			panel11.add(addColumn(-1, 1));
 		}
 
 		scrollPane1 = new JScrollPane(panel11);
@@ -120,10 +209,23 @@ public class Frame3 extends JFrame{
 						TodoVo vo = itmList.get(i);
 						vo.setSubject(textFieldList.get(i).getText());
 						vo.setCheckYn((checkBoxList.get(i).isSelected())? "Y" : "N");
+						vo.setOdr(i);
 						
-						if(vo.getSeq() == -1)
-							todoService.insert(vo);
-						else
+						//신규항목은 insert, 기존항목은 update
+						if(vo.getSeq() == -1) {
+							//하위항목이면 상위항목의 시퀀스값을 가져온다.
+							if(vo.getLevel() > 1 && vo.getParentSeq() == -1) {
+								for(int j=i-1; j>0; j--) {
+									TodoVo imsiVo = itmList.get(j);
+									if(imsiVo.getLevel() < vo.getLevel()) {
+										vo.setParentSeq(imsiVo.getSeq());
+										break;
+									}
+								}
+							}
+							int seq = todoService.insert(vo);
+							vo.setSeq(seq);
+						}else
 							todoService.update(vo);
 					}
 				}
@@ -139,44 +241,71 @@ public class Frame3 extends JFrame{
 				
 				if(itmList != null && itmList.size() > 0) {
 					for(TodoVo vo : itmList) {
-						panel = new JPanel();
-						checkBox = new JCheckBox();
+						JPanel panel = new JPanel();
+						JCheckBox checkBox = new JCheckBox();
 						checkBox.setSelected(("Y".equals(vo.getCheckYn()))? true : false);
 						panel.add(checkBox);
 						checkBoxList.add(checkBox);
 
-						textField = new JTextField(38);
+						JTextField textField = new JTextField(40 - vo.getLevel() * 2);
 						textField.setText(vo.getSubject());
 						panel.add(textField);
 						textFieldList.add(textField);
 						
-						button = new JButton("+");
+						JButton button = new JButton("+");
 						button.setBorder(BorderFactory.createLineBorder(Color.black));
 						button.setPreferredSize(new Dimension(16, 16));
+						button.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								Component[] comp = panel11.getComponents();
+								
+								for(int i=0; i<comp.length; i++) {
+									JPanel itm = (JPanel)comp[i];
+									JButton button = (JButton)itm.getComponents()[2];
+									
+									if(e.getSource() == button) {
+										JPanel panel = new JPanel();
+										JCheckBox checkBox = new JCheckBox();
+										panel.add(checkBox);
+
+										JTextField textField = new JTextField(40 - (itmList.get(i).getLevel() + 1) * 2);
+										panel.add(textField);
+										
+										button = new JButton("+");
+										button.setBorder(BorderFactory.createLineBorder(Color.black));
+										button.setPreferredSize(new Dimension(16, 16));
+										button.addActionListener(new ActionListener() {
+
+											public void actionPerformed(ActionEvent e) {
+												// TODO Auto-generated method stub
+												
+											}
+											
+										});
+										panel.add(button);
+										
+										panel11.add(panel, i + 1);
+										
+										checkBoxList.add(i + 1, checkBox);
+										textFieldList.add(i + 1, textField);
+										TodoVo vo = new TodoVo();
+										vo.setSeq(-1);
+										vo.setParentSeq(itmList.get(i).getSeq());
+										vo.setLevel(itmList.get(i).getLevel() + 1);
+										itmList.add(i + 1, vo);
+										break;
+									}
+								}
+								panel11.revalidate();
+								panel11.repaint();
+							}
+						});
 						panel.add(button);
 						
 						panel11.add(panel);
 					}
-				}else {
-					panel = new JPanel();
-					itmList = new ArrayList<TodoVo>();
-					itmList.add(new TodoVo());
-					
-					checkBox = new JCheckBox();
-					panel.add(checkBox);
-					checkBoxList.add(checkBox);
-
-					textField = new JTextField(38);
-					panel.add(textField);
-					textFieldList.add(textField);
-					
-					button = new JButton("+");
-					button.setBorder(BorderFactory.createLineBorder(Color.black));
-					button.setPreferredSize(new Dimension(16, 16));
-					panel.add(button);
-					
-					panel11.add(panel);
-				}
+				}else
+					panel11.add(addColumn(-1, 0));
 			}
 		});
 		panel12.add(button1);
@@ -184,27 +313,7 @@ public class Frame3 extends JFrame{
 		button2 = new JButton("추가");
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel = new JPanel();
-				
-				TodoVo vo = new TodoVo();
-				vo.setSeq(-1);
-				itmList.add(vo);
-				
-				checkBox = new JCheckBox();
-				panel.add(checkBox);
-				checkBoxList.add(checkBox);
-
-				textField = new JTextField(38);
-				panel.add(textField);
-				textFieldList.add(textField);
-				
-				button = new JButton("+");
-				button.setBorder(BorderFactory.createLineBorder(Color.black));
-				button.setPreferredSize(new Dimension(16, 16));
-				panel.add(button);
-				
-				panel11.add(panel);
-				
+				panel11.add(addColumn(-1, 1));
 				panel11.revalidate();
 				panel11.repaint();
 			}
