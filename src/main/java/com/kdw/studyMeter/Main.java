@@ -19,12 +19,9 @@ public class Main {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			//URL resource = getClass().getClassLoader().getResource("db");
 			URL resource = Main.class.getClassLoader().getResource("db");
 			String filePath = resource.getFile();
 			conn = DriverManager.getConnection("jdbc:sqlite:" + filePath);
-			
-			//conn = DriverManager.getConnection("jdbc:sqlite:D:\\Users\\gkf9876\\eclipse-workspace\\StudyMeter\\src\\main\\resources\\db");
 			//conn = DriverManager.getConnection("jdbc:sqlite:db");
 		}catch(Exception e) {
 			e.printStackTrace();

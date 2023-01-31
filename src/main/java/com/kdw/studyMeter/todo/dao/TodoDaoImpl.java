@@ -38,7 +38,7 @@ public class TodoDaoImpl implements TodoDao{
 					+ "	WHERE"
 					+ "		USE_YN = 'Y'"
 					+ "	ORDER BY"
-					+ "		CASE WHEN CHECK_YN = 'Y' THEN 1 ELSE 0 END ASC, ODR ASC"
+					+ "		ODR ASC"
 					+ "");
 			while(rs.next()) {
 				TodoVo vo = new TodoVo();
@@ -97,7 +97,8 @@ public class TodoDaoImpl implements TodoDao{
 			
 			ResultSet rs = pstmt.getGeneratedKeys();
 			rs.next();
-			result = rs.getInt("last_insert_rowid()");
+			vo.setSeq(rs.getInt("last_insert_rowid()"));
+			result = vo.getSeq();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

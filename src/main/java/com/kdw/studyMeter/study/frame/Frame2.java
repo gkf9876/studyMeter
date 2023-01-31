@@ -1,4 +1,4 @@
-package com.kdw.studyMeter;
+package com.kdw.studyMeter.study.frame;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;

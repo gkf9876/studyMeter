@@ -18,14 +18,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import com.kdw.studyMeter.study.frame.Frame2;
 import com.kdw.studyMeter.study.service.StudyService;
 import com.kdw.studyMeter.study.vo.StudyVo;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
+import com.kdw.studyMeter.todo.frame.TodoCalendarFrame;
+import com.kdw.studyMeter.todo.frame.TodoFrame;
 
 public class Frame1 extends JFrame{
 	
 	private JFrame frame1;
-	private JFrame frame2;
+	private TodoFrame frame2;
+	private JFrame todoCalendarFrame;
 	
 	private JPanel panel1;
 	private JPanel panel11;
@@ -54,6 +58,7 @@ public class Frame1 extends JFrame{
 	private JButton button2;
 	private JButton button3;
 	private JButton button4;
+	private JButton button5;
 	
 	private DefaultListModel<String> model;
 	private JList<String> list1;
@@ -249,14 +254,24 @@ public class Frame1 extends JFrame{
 			});
 			panel14.add(button3);
 			
-			frame2 = new Frame3(todoService);
+			frame2 = new TodoFrame(todoService);
 			button4 = new JButton("할일");
 			button4.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					frame2.init();
 					frame2.setVisible(true);
 				}
 			});
 			panel14.add(button4);
+
+			todoCalendarFrame = new TodoCalendarFrame();
+			button5 = new JButton("캘린더");
+			button5.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					todoCalendarFrame.setVisible(true);
+				}
+			});
+			panel14.add(button5);
 			
 			panel1.add(panel14);
 			
