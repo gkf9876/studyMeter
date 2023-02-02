@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.vo.TodoVo;
@@ -33,15 +34,13 @@ public class TodoFrame extends JFrame{
 	private JButton button2;
 	
 	//할일 목록
-	private List<TodoVo> todoList;
+	private TodoItem todoItem;
 	
 	private TodoService todoService;
 	
-	private int cnt = 0;
-	
 	public TodoFrame(final TodoService todoService) {
 		this.setTitle("할일 목록");
-		this.setSize(540, 490);
+		this.setSize(600, 490);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
 		//this.setResizable(false);
@@ -71,30 +70,8 @@ public class TodoFrame extends JFrame{
 				//화면데이터 할일목록에 저장.
 				Component[] comps = panel11.getComponents();
 				for(int i=0; i<comps.length; i++) {
-					JPanel panel = (JPanel)comps[i];
-					JCheckBox checkBox = (JCheckBox)panel.getComponents()[0];
-					JTextField textField = (JTextField)panel.getComponents()[1];
-					JButton button1 = (JButton)panel.getComponents()[2];
-					
-					TodoVo vo = todoList.get(i);
-					vo.setCheckYn((checkBox.isSelected())? "Y" : "N");
-					vo.setSubject(textField.getText());
-					vo.setOdr(i);
-					
-					//현재 항목이 이전 항목의 하위항목일때
-					for(int j=i-1; j>=0; j--) {
-						if(todoList.get(j).getLevel() < vo.getLevel()) {
-							vo.setParentSeq(todoList.get(j).getSeq());
-							break;
-						}
-					}
-					
-					//기존항목은 update, 신규항목은 insert
-					if(vo.getSeq() != -1) {
-						todoService.update(vo);
-					}else {
-						todoService.insert(vo);
-					}
+					TodoItem panel = (TodoItem)comps[i];
+					panel.save();
 				}
 				
 				//할일 목록으로 데이터 업데이트
@@ -109,9 +86,13 @@ public class TodoFrame extends JFrame{
 				TodoVo vo = new TodoVo();
 				vo.setSeq(-1);
 				vo.setParentSeq(-1);
-				vo.setLevel(0);
-				todoList.add(vo);
-				panel11.add(new TodoItem(vo), panel11.getComponentCount());
+				//vo.setLevel(1);
+				//vo.setOdr(panel11.getComponentCount());
+				//TodoItem item = new TodoItem(vo);
+				//todoItemList.add(item);
+				todoItem.add(vo);
+				//panel11.add(item);
+				
 				panel11.revalidate();
 				panel11.repaint();
 			}
@@ -124,22 +105,9 @@ public class TodoFrame extends JFrame{
 	//할일 목록 초기화
 	public void init() {
 		panel11.removeAll();
-
-		todoList = todoService.select();
 		
-		if(todoList.size() > 0) {
-			for(TodoVo vo : todoList) {
-				TodoItem itm = new TodoItem(vo);
-				panel11.add(itm);
-			}
-		}else {
-			TodoVo vo = new TodoVo();
-			vo.setSeq(-1);
-			vo.setParentSeq(-1);
-			vo.setLevel(0);
-			todoList.add(vo);
-			panel11.add(new TodoItem(vo));
-		}
+		todoItem = new TodoItem();
+		panel11.add(todoItem);
 		
 		panel11.revalidate();
 		panel11.repaint();
@@ -147,105 +115,274 @@ public class TodoFrame extends JFrame{
 	
 	private class TodoItem extends JPanel{
 		
+		private JPanel panel;
 		private JCheckBox checkBox;
 		private JTextField textField;
 		private JButton button1;
+		private JButton button2;
+		private JButton button3;
 		
 		private TodoVo todoVo;
 		
-		public TodoItem(final TodoVo vo) {
-			todoVo = vo;
+		//할일 목록
+		private List<TodoItem> sonItemList;
+
+		//최상위 아이템 추가할때 사용
+		public TodoItem() {
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.todoVo = null;
 			
+			panel = new JPanel();
+			this.add(panel);
+			
+			//자식 항목 출력하기.
+			sonItemList = new ArrayList<TodoItem>();
+			List<TodoVo> sonItem = todoService.select(-1, 1);
+			if(sonItem.size() > 0) {
+				for(TodoVo vo : sonItem) {
+					TodoItem item = new TodoItem(vo);
+					sonItemList.add(item);
+					this.add(item);
+				}
+			}else {
+				TodoVo vo = new TodoVo();
+				vo.setSeq(-1);
+				vo.setParentSeq(-1);
+				vo.setLevel(1);
+				TodoItem item = new TodoItem(vo);
+				sonItemList.add(item);
+				this.add(item);
+			}
+		}
+		
+		public TodoItem(TodoVo todoVo) {
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.todoVo = todoVo;
+			
+			panel = new JPanel();
 			checkBox = new JCheckBox();
-			checkBox.setSelected(("Y".equals(vo.getCheckYn()))? true : false);
+			checkBox.setSelected(("Y".equals(this.todoVo.getCheckYn()))? true : false);
 			checkBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//하위 항목까지 모두 체크/해제
-					Component[] comps = panel11.getComponents();
-					for(int i=0; i<comps.length; i++) {
-						JPanel panel = (JPanel)comps[i];
-						JCheckBox checkBox = (JCheckBox)panel.getComponents()[0];
-						JTextField textField = (JTextField)panel.getComponents()[1];
-						JButton button1 = (JButton)panel.getComponents()[2];
-						TodoVo vo = todoList.get(i);
-						
-						if(e.getSource() == checkBox) {
-							//신규 항목 위치 확인하여 추가
-							for(int j=i+1; j<todoList.size(); j++) {
-								if(vo.getLevel() < todoList.get(j).getLevel()) {
-									JPanel imsiPanel = (JPanel)panel11.getComponents()[j];
-									JCheckBox imsiCheckBox = (JCheckBox)imsiPanel.getComponents()[0];
-									JTextField imsiTextField = (JTextField)imsiPanel.getComponents()[1];
-									JButton imsiButton1 = (JButton)imsiPanel.getComponents()[2];
-									TodoVo imsiVo = todoList.get(j);
-									
-									imsiCheckBox.setSelected(checkBox.isSelected());
-								}else if(vo.getLevel() >= todoList.get(j).getLevel()) {
-									break;
-								}
-							}
-							
-							panel11.revalidate();
-							panel11.repaint();
-							break;
-						}
-					}
+					//현재 항목의 하위항목을 추가
+					setCheck((checkBox.isSelected())? true : false);
 				}
 			});
-			this.add(checkBox);
+			panel.add(checkBox);
 			
-			textField = new JTextField(40 - vo.getLevel() * 2);
-			textField.setText(vo.getSubject());
-			this.add(textField);
+			textField = new JTextField(40 - this.todoVo.getLevel() * 2);
+			textField.setText(this.todoVo.getSubject());
+			panel.add(textField);
 			
 			button1 = new JButton("+");
 			button1.setBorder(BorderFactory.createLineBorder(Color.black));
 			button1.setPreferredSize(new Dimension(16, 16));
 			button1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-
 					//현재 항목의 하위항목을 추가
-					Component[] comps = panel11.getComponents();
-					for(int i=0; i<comps.length; i++) {
-						JPanel panel = (JPanel)comps[i];
-						JCheckBox checkBox = (JCheckBox)panel.getComponents()[0];
-						JTextField textField = (JTextField)panel.getComponents()[1];
-						JButton button1 = (JButton)panel.getComponents()[2];
-						TodoVo vo = todoList.get(i);
+					TodoItem item = (TodoItem)panel.getParent();
+					TodoVo vo = new TodoVo();
+					vo.setSeq(-1);
+					item.add(vo);
+					
+					item.revalidate();
+					item.repaint();
+				}
+			});
+			panel.add(button1);
+			
+			button2 = new JButton("▲");
+			button2.setBorder(BorderFactory.createLineBorder(Color.black));
+			button2.setPreferredSize(new Dimension(16, 16));
+			button2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//해당 항목의 위에 있는 항목 불러오기
+					TodoItem currentItem = (TodoItem)panel.getParent();
+					TodoItem parentItem = (TodoItem)currentItem.getParent();
+					List<TodoItem> sonItemList = parentItem.getSonItemList();
+					for(int i=0; i<sonItemList.size(); i++) {
+						TodoItem regionItem = (i-1 >= 0)? sonItemList.get(i-1) : null;
+						TodoItem item = sonItemList.get(i);
+						TodoItem nextItem = (i+1 < sonItemList.size())? sonItemList.get(i+1) : null;
 						
-						if(e.getSource() == button1) {
-							TodoVo sonVo = new TodoVo();
-							sonVo.setSeq(-1);
-							sonVo.setParentSeq(vo.getSeq());
-							sonVo.setLevel(vo.getLevel() + 1);
+						if(item == currentItem) {
+							System.out.println("=================== UP MOVE!! ======================");
+							System.out.println("regionItem : " + ((regionItem != null)? regionItem.getTodoVo().getSubject() + ", odr : " + regionItem.getTodoVo().getOdr() : "null"));
+							System.out.println("item : " + item.getTodoVo().getSubject() + ", odr : " + item.getTodoVo().getOdr());
+							System.out.println("nextItem : " + ((nextItem != null)? nextItem.getTodoVo().getSubject() + ", odr : " + nextItem.getTodoVo().getOdr() : "null"));
+							System.out.println("=================== RESULT!! =======================");
 							
-							//신규 항목 위치 확인하여 추가
-							if(i < comps.length - 1) {
-								for(int j=i+1; j<todoList.size(); j++) {
-									if(vo.getLevel() >= todoList.get(j).getLevel()) {
-										todoList.add(j, sonVo);
-										panel11.add(new TodoItem(sonVo), j);
-										break;
-									}else if(j == todoList.size() - 1) {
-										todoList.add(j+1, sonVo);
-										panel11.add(new TodoItem(sonVo), j+1);
-										break;
-									}
-								}
-							}else {
-								//마지막 항목일때
-								todoList.add(i + 1, sonVo);
-								panel11.add(new TodoItem(sonVo), i + 1);
+							if(regionItem != null) {
+								TodoVo regionVo = regionItem.getTodoVo();
+								TodoVo vo = item.getTodoVo();
+								
+								int tempOdr = regionVo.getOdr();
+								regionVo.setOdr(vo.getOdr());
+								vo.setOdr(tempOdr);
+								
+								regionItem.setTodoVo(regionVo);
+								item.setTodoVo(vo);
+								
+								parentItem.remove(item);
+								parentItem.add(item, i);
+								
+								sonItemList.remove(i);
+								sonItemList.add(i-1, item);
+								parentItem.setSonItemList(sonItemList);
+								
+								TodoItem imsiRegionItem = (i-1 >= 0)? sonItemList.get(i-1) : null;
+								TodoItem imsiItem = sonItemList.get(i);
+								TodoItem imsiNextItem = (i+1 < sonItemList.size())? sonItemList.get(i+1) : null;
+								
+								System.out.println("regionItem : " + ((imsiRegionItem != null)? imsiRegionItem.getTodoVo().getSubject() + ", odr : " + imsiRegionItem.getTodoVo().getOdr() : "null"));
+								System.out.println("item : " + imsiItem.getTodoVo().getSubject() + ", odr : " + imsiItem.getTodoVo().getOdr());
+								System.out.println("nextItem : " + ((imsiNextItem != null)? imsiNextItem.getTodoVo().getSubject() + ", odr : " + imsiNextItem.getTodoVo().getOdr() : "null"));
 							}
 							
-							panel11.revalidate();
-							panel11.repaint();
+							System.out.println("====================================================\n\n\n");
+							
+							parentItem.revalidate();
+							parentItem.repaint();
 							break;
 						}
 					}
 				}
 			});
-			this.add(button1);
+			panel.add(button2);
+			
+			button3 = new JButton("▼");
+			button3.setBorder(BorderFactory.createLineBorder(Color.black));
+			button3.setPreferredSize(new Dimension(16, 16));
+			button3.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//해당 항목의 위에 있는 항목 불러오기
+					TodoItem currentItem = (TodoItem)panel.getParent();
+					TodoItem parentItem = (TodoItem)currentItem.getParent();
+					List<TodoItem> sonItemList = parentItem.getSonItemList();
+					for(int i=0; i<sonItemList.size(); i++) {
+						TodoItem regionItem = (i-1 >= 0)? sonItemList.get(i-1) : null;
+						TodoItem item = sonItemList.get(i);
+						TodoItem nextItem = (i+1 < sonItemList.size())? sonItemList.get(i+1) : null;
+						
+						if(item == currentItem) {
+							System.out.println("=================== DOWN MOVE!! ======================");
+							System.out.println("regionItem : " + ((regionItem != null)? regionItem.getTodoVo().getSubject() + ", odr : " + regionItem.getTodoVo().getOdr() : "null"));
+							System.out.println("item : " + item.getTodoVo().getSubject() + ", odr : " + item.getTodoVo().getOdr());
+							System.out.println("nextItem : " + ((nextItem != null)? nextItem.getTodoVo().getSubject() + ", odr : " + nextItem.getTodoVo().getOdr() : "null"));
+							System.out.println("=================== RESULT!! =======================");
+							
+							if(nextItem != null) {
+								TodoVo nextVo = nextItem.getTodoVo();
+								TodoVo vo = item.getTodoVo();
+								
+								int tempOdr = nextVo.getOdr();
+								nextVo.setOdr(vo.getOdr());
+								vo.setOdr(tempOdr);
+								
+								nextItem.setTodoVo(nextVo);
+								item.setTodoVo(vo);
+								
+								parentItem.remove(item);
+								parentItem.add(item, i+2);
+								
+								sonItemList.remove(i);
+								sonItemList.add(i+1, item);
+								parentItem.setSonItemList(sonItemList);
+								
+								TodoItem imsiRegionItem = (i-1 >= 0)? sonItemList.get(i-1) : null;
+								TodoItem imsiItem = sonItemList.get(i);
+								TodoItem imsiNextItem = (i+1 < sonItemList.size())? sonItemList.get(i+1) : null;
+								
+								System.out.println("regionItem : " + ((imsiRegionItem != null)? imsiRegionItem.getTodoVo().getSubject() + ", odr : " + imsiRegionItem.getTodoVo().getOdr() : "null"));
+								System.out.println("item : " + imsiItem.getTodoVo().getSubject() + ", odr : " + imsiItem.getTodoVo().getOdr());
+								System.out.println("nextItem : " + ((imsiNextItem != null)? imsiNextItem.getTodoVo().getSubject() + ", odr : " + imsiNextItem.getTodoVo().getOdr() : "null"));
+							}
+							
+							System.out.println("====================================================\n\n\n");
+							
+							parentItem.revalidate();
+							parentItem.repaint();
+							break;
+						}
+					}
+				}
+			});
+			panel.add(button3);
+			this.add(panel);
+			
+			//자식 항목 출력하기.
+			List<TodoVo> sonItem = todoService.select(todoVo.getSeq(), todoVo.getLevel() + 1);
+			sonItemList = new ArrayList<TodoItem>();
+			for(TodoVo vo : sonItem) {
+				TodoItem item = new TodoItem(vo);
+				sonItemList.add(item);
+				this.add(item);
+			}
+		}
+		
+		public void save() {
+			if(this.todoVo != null) {
+				this.todoVo.setCheckYn((checkBox.isSelected())? "Y" : "N");
+				this.todoVo.setSubject(textField.getText());
+				
+				//기존항목은 update, 신규항목은 insert
+				if(this.todoVo.getSeq() != -1) {
+					todoService.update(this.todoVo);
+				}else {
+					todoService.insert(this.todoVo);
+				}
+			}
+			
+			//자식 항목 모두 저장처리
+			for(TodoItem item : sonItemList) {
+				//부모 아이템 시퀀스값 가져와서 저장.
+				if(this.todoVo != null) {
+					TodoVo vo = item.getTodoVo();
+					vo.setParentSeq(this.todoVo.getSeq());
+					item.setTodoVo(vo);
+				}
+				item.save();
+			}
+		}
+		
+		public void add(TodoVo vo) {
+			if(this.todoVo != null) {
+				vo.setParentSeq(this.todoVo.getSeq());
+				vo.setLevel(this.todoVo.getLevel() + 1);
+				vo.setOdr(this.getComponentCount());
+			}else {
+				vo.setParentSeq(-1);
+				vo.setLevel(1);
+				vo.setOdr(this.getComponentCount());
+			}
+			
+			TodoItem item = new TodoItem(vo);
+			sonItemList.add(item);
+			this.add(item);
+		}
+		
+		public void setCheck(boolean checkYn) {
+			checkBox.setSelected(checkYn);
+			
+			for(TodoItem item : sonItemList) {
+				item.setCheck(checkYn);
+			}
+		}
+
+		public TodoVo getTodoVo() {
+			return todoVo;
+		}
+
+		public void setTodoVo(TodoVo todoVo) {
+			this.todoVo = todoVo;
+		}
+
+		public List<TodoItem> getSonItemList() {
+			return sonItemList;
+		}
+
+		public void setSonItemList(List<TodoItem> sonItemList) {
+			this.sonItemList = sonItemList;
 		}
 	}
 }

@@ -36,7 +36,8 @@ public class TodoDaoImpl implements TodoDao{
 					+ "	FROM "
 					+ "		TB_TODO"
 					+ "	WHERE"
-					+ "		USE_YN = 'Y'"
+					+ "		1=1"
+					+ "		AND USE_YN = 'Y'"
 					+ "	ORDER BY"
 					+ "		ODR ASC"
 					+ "");
@@ -134,4 +135,53 @@ public class TodoDaoImpl implements TodoDao{
 		return result;
 	}
 
+	public List<TodoVo> select(int parentSeq, int level) {
+		List<TodoVo> result = new ArrayList<TodoVo>();
+		
+		try {
+			String sql = ""
+					+ "	SELECT "
+					+ "		SEQ"
+					+ "		, PARENT_SEQ"
+					+ "		, LEVEL"
+					+ "		, SUBJECT"
+					+ "		, USE_YN"
+					+ "		, CHECK_YN"
+					+ "		, ODR"
+					+ "		, CREATE_DATE"
+					+ "	FROM "
+					+ "		TB_TODO"
+					+ "	WHERE"
+					+ "		1=1"
+					+ "		AND PARENT_SEQ = ?"
+					+ "		AND LEVEL = ?"
+					+ "		AND USE_YN = 'Y'"
+					+ "	ORDER BY"
+					+ "		ODR ASC"
+					+ "";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, parentSeq);
+			pstmt.setInt(2, level);
+			
+			pstmt.execute();
+			ResultSet rs = pstmt.getResultSet();
+			
+			while(rs.next()) {
+				TodoVo vo = new TodoVo();
+				vo.setSeq(rs.getInt("SEQ"));
+				vo.setParentSeq(rs.getInt("PARENT_SEQ"));
+				vo.setLevel(rs.getInt("LEVEL"));
+				vo.setSubject(rs.getString("SUBJECT"));
+				vo.setUseYn(rs.getString("USE_YN"));
+				vo.setCheckYn(rs.getString("CHECK_YN"));
+				vo.setOdr(rs.getInt("ODR"));
+				vo.setCreateDate(rs.getString("CREATE_DATE"));
+				result.add(vo);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }

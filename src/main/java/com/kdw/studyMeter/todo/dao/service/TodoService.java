@@ -29,4 +29,8 @@ public class TodoService {
 	public int update(TodoVo vo) {
 		return dao.update(vo);
 	}
+
+	public List<TodoVo> select(int parentSeq, int level) {
+		return dao.select(parentSeq, level);
+	}
 }

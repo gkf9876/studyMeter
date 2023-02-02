@@ -9,4 +9,5 @@ public interface TodoDao {
 	public TodoVo selectOne(TodoVo vo);
 	public int insert(TodoVo vo);
 	public int update(TodoVo vo);
+	public List<TodoVo> select(int parentSeq, int level);
 }
