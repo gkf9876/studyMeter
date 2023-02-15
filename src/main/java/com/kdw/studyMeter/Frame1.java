@@ -18,12 +18,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import com.kdw.studyMeter.calendar.frame.CalendarFrame;
+import com.kdw.studyMeter.calendar.service.CalendarService;
 import com.kdw.studyMeter.study.frame.Frame2;
 import com.kdw.studyMeter.study.service.StudyService;
 import com.kdw.studyMeter.study.vo.StudyVo;
 import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
-import com.kdw.studyMeter.todo.frame.TodoCalendarFrame;
 import com.kdw.studyMeter.todo.frame.TodoFrame;
 
 public class Frame1 extends JFrame{
@@ -70,7 +71,7 @@ public class Frame1 extends JFrame{
 	
 	private int seq = 0;
 	
-	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService) {
+	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService, final CalendarService calendarService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -265,7 +266,7 @@ public class Frame1 extends JFrame{
 			});
 			panel14.add(button4);
 
-			todoCalendarFrame = new TodoCalendarFrame();
+			todoCalendarFrame = new CalendarFrame(calendarService);
 			button5 = new JButton("캘린더");
 			button5.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
