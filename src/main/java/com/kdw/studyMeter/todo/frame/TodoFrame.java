@@ -14,11 +14,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
+import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.vo.TodoVo;
 
@@ -37,15 +38,17 @@ public class TodoFrame extends JFrame{
 	private TodoItem todoItem;
 	
 	private TodoService todoService;
+	private TodoDetailService todoDetailService;
 	
-	public TodoFrame(final TodoService todoService) {
+	public TodoFrame(final TodoService todoService, final TodoDetailService todoDetailService) {
 		this.setTitle("할일 목록");
-		this.setSize(600, 490);
+		this.setSize(650, 490);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
-		//this.setResizable(false);
+		this.setResizable(false);
 		
 		this.todoService = todoService;
+		this.todoDetailService = todoDetailService;
 		
 		//할일 목록 출력
 		panel1 = new JPanel();
@@ -57,7 +60,7 @@ public class TodoFrame extends JFrame{
 		
 		//스크롤 생성
 		scrollPane1 = new JScrollPane(panel11);
-		scrollPane1.setPreferredSize(new Dimension(550, 400));
+		scrollPane1.setPreferredSize(new Dimension(600, 400));
 		
 		panel1.add(scrollPane1);
 		this.add(panel1, BorderLayout.CENTER);
@@ -115,12 +118,14 @@ public class TodoFrame extends JFrame{
 	
 	private class TodoItem extends JPanel{
 		
+		private TodoDetailFrame todoDetailFrame;
 		private JPanel panel;
 		private JCheckBox checkBox;
 		private JTextField textField;
 		private JButton button1;
 		private JButton button2;
 		private JButton button3;
+		private JButton button4;
 		
 		private TodoVo todoVo;
 		
@@ -155,9 +160,9 @@ public class TodoFrame extends JFrame{
 			}
 		}
 		
-		public TodoItem(TodoVo todoVo) {
+		public TodoItem(TodoVo vo) {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			this.todoVo = todoVo;
+			this.todoVo = vo;
 			
 			panel = new JPanel();
 			checkBox = new JCheckBox();
@@ -308,13 +313,28 @@ public class TodoFrame extends JFrame{
 				}
 			});
 			panel.add(button3);
+			
+			button4 = new JButton("상세");
+			todoDetailFrame = new TodoDetailFrame(todoVo.getSeq(), textField.getText(), todoDetailService);
+			button4.setBorder(BorderFactory.createLineBorder(Color.black));
+			button4.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(todoVo != null && todoVo.getSeq() > -1) {
+						todoDetailFrame.setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(null, "빈 항목의 상세입력은 할 수 없습니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			panel.add(button4);
+			
 			this.add(panel);
 			
 			//자식 항목 출력하기.
 			List<TodoVo> sonItem = todoService.select(todoVo.getSeq(), todoVo.getLevel() + 1);
 			sonItemList = new ArrayList<TodoItem>();
-			for(TodoVo vo : sonItem) {
-				TodoItem item = new TodoItem(vo);
+			for(TodoVo sonvo : sonItem) {
+				TodoItem item = new TodoItem(sonvo);
 				sonItemList.add(item);
 				this.add(item);
 			}

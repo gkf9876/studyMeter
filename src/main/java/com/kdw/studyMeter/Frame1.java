@@ -21,6 +21,7 @@ import javax.swing.Timer;
 import com.kdw.studyMeter.study.frame.Frame2;
 import com.kdw.studyMeter.study.service.StudyService;
 import com.kdw.studyMeter.study.vo.StudyVo;
+import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.frame.TodoCalendarFrame;
 import com.kdw.studyMeter.todo.frame.TodoFrame;
@@ -69,7 +70,7 @@ public class Frame1 extends JFrame{
 	
 	private int seq = 0;
 	
-	public Frame1(final StudyService studyService, final TodoService todoService) {
+	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -254,7 +255,7 @@ public class Frame1 extends JFrame{
 			});
 			panel14.add(button3);
 			
-			frame2 = new TodoFrame(todoService);
+			frame2 = new TodoFrame(todoService, todoDetailService);
 			button4 = new JButton("할일");
 			button4.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

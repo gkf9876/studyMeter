@@ -34,7 +34,6 @@ public class TodoCalendarFrame extends JFrame{
 		this.setSize(600, 500);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
-		this.setLayout(new BorderLayout());
 		//this.setResizable(false);
 		
 		cal = Calendar.getInstance();
