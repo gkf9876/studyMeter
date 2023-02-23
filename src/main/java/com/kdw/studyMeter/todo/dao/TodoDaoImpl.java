@@ -39,7 +39,7 @@ public class TodoDaoImpl implements TodoDao{
 					+ "		1=1"
 					+ "		AND USE_YN = 'Y'"
 					+ "	ORDER BY"
-					+ "		ODR ASC"
+					+ "		CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC"
 					+ "");
 			while(rs.next()) {
 				TodoVo vo = new TodoVo();
@@ -157,7 +157,7 @@ public class TodoDaoImpl implements TodoDao{
 					+ "		AND LEVEL = ?"
 					+ "		AND USE_YN = 'Y'"
 					+ "	ORDER BY"
-					+ "		ODR ASC"
+					+ "		CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC"
 					+ "";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, parentSeq);

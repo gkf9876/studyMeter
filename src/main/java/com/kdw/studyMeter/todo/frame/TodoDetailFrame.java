@@ -6,17 +6,26 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.kdw.studyMeter.file.service.FileService;
+import com.kdw.studyMeter.file.vo.FileVo;
 import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.vo.TodoDetailVo;
 
@@ -29,6 +38,7 @@ public class TodoDetailFrame extends JFrame{
 	private JPanel panel1;
 	private JPanel panel11;
 	private JPanel panel2;
+	private JPanel panel3;
 	
 	private JScrollPane scrollPane1;
 	
@@ -40,16 +50,19 @@ public class TodoDetailFrame extends JFrame{
 	
 	private TodoDetailService todoDetailService;
 	
+	private FileService fileService;
+	
 	private int parentSeq;
 	
-	public TodoDetailFrame(int parentSeq, String title, final TodoDetailService service) {
+	public TodoDetailFrame(int parentSeq, String title, final TodoDetailService todoDetailService, final FileService fileService) {
 		this.setTitle(title);
 		this.setSize(650, 550);
 		this.setLayout(new BorderLayout());
 		
 		this.parentSeq = parentSeq;
 		
-		this.todoDetailService = service;
+		this.todoDetailService = todoDetailService;
+		this.fileService = fileService;
 		
 		panel1 = new JPanel();
 		panel11 = new JPanel();
@@ -127,14 +140,17 @@ public class TodoDetailFrame extends JFrame{
 	private class TodoDetailItem extends JPanel{
 		private JPanel panel1;
 		private JPanel panel2;
+		private JPanel panel3;
 		
 		private JDatePickerImpl datePicker;
 		private UtilDateModel model;
 		private JTextArea textArea;
 		private JScrollPane scrollPane;
-		private JButton button;
+		private JButton button1;
+		private JButton button2;
 		
 		private TodoDetailVo todoDetailVo;
+		private List<FileVo> fileList;
 		
 		public TodoDetailItem(TodoDetailVo vo) {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -162,36 +178,167 @@ public class TodoDetailFrame extends JFrame{
 	        datePicker = new JDatePickerImpl(datePanel);
 	        panel1.add(datePicker);
 			
-			button = new JButton("삭제");
-			button.addActionListener(new ActionListener() {
+			button1 = new JButton("삭제");
+			button1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int result = JOptionPane.showConfirmDialog(null, "삭제하시겠습니까?", "확인", JOptionPane.OK_CANCEL_OPTION);
 					if(result == 0) {
 						datePicker.setEnabled(false);
 						textArea.setEnabled(false);
-						button.setEnabled(false);
+						button1.setEnabled(false);
 						todoDetailVo.setUseYn("N");
 					}
 				}
 			});
-			panel1.add(button);
+			panel1.add(button1);
+			
+			button2 = new JButton("첨부");
+			button2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser fileChooser = new JFileChooser();
+					int ret = fileChooser.showOpenDialog(null);
+					if(ret != JFileChooser.APPROVE_OPTION) {
+						
+					}else {
+						try {
+							final FileVo file = new FileVo();
+							file.setFilePath(fileChooser.getSelectedFile().getPath());
+							file.setFileName(fileChooser.getSelectedFile().getName());
+							
+							String path = fileChooser.getSelectedFile().getPath();
+							
+							//KB 단위로 저장
+							file.setFileSize((int)Files.size(Paths.get(path)) / 1024);
+							if(path.lastIndexOf(".") > -1)
+								file.setFileExtns(path.substring(path.lastIndexOf(".") + 1));
+							else
+								file.setFileExtns("");
+							
+							int seq = fileService.insert(file);
+							String fileSeqs = todoDetailVo.getFileSeqs();
+							if(fileSeqs != null) {
+								fileSeqs += ("," + seq);
+							}else {
+								fileSeqs = String.valueOf(seq);
+							}
+							todoDetailVo.setFileSeqs(fileSeqs);
+							todoDetailService.update(todoDetailVo);
+							
+							fileList.add(file);
+
+							JLabel label = new JLabel(file.getFileName());
+							label.addMouseListener(new MouseListener() {
+				
+								public void mouseClicked(MouseEvent e) {
+									TodoDetailImageFrame frame = new TodoDetailImageFrame(file.getFileName(), System.getProperty("user.dir") + "\\" + file.getFilePath());
+									frame.setVisible(true);
+								}
+				
+								public void mousePressed(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+				
+								public void mouseReleased(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+				
+								public void mouseEntered(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+				
+								public void mouseExited(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+							});
+							panel3.add(label);
+							
+							panel3.revalidate();
+							panel3.repaint();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			});
+			panel1.add(button2);
 			
 			this.add(panel1);
 	        
 			panel2 = new JPanel();
 			panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
 			textArea = new JTextArea((vo.getSeq() == -1)? "" : vo.getContents());
+			textArea.setLineWrap(true);
 			scrollPane = new JScrollPane(textArea);
 			scrollPane.setPreferredSize(new Dimension(560, 100));
 			panel2.add(scrollPane);
 			
 			this.add(panel2);
+			
+			panel3 = new JPanel();
+			
+			//첨부된 파일 목록 출력
+			fileList = new ArrayList<FileVo>();
+			if(vo.getFileSeqs() != null && !"".equals(vo.getFileSeqs().trim())) {
+				String[] fileArr = vo.getFileSeqs().split(",");
+				for(String seq : fileArr) {
+					FileVo fileVo = new FileVo();
+					fileVo.setSeq(Integer.parseInt(seq));
+					fileVo = fileService.selectOne(fileVo);
+					fileList.add(fileVo);
+				}
+				
+				for(final FileVo fileVo : fileList) {
+					JLabel label = new JLabel(fileVo.getFileName());
+					label.addMouseListener(new MouseListener() {
+		
+						public void mouseClicked(MouseEvent e) {
+							TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+							frame.setVisible(true);
+						}
+		
+						public void mousePressed(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+		
+						public void mouseReleased(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+		
+						public void mouseEntered(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+		
+						public void mouseExited(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
+					panel3.add(label);
+				}
+			}
+			
+			this.add(panel3);
 		}
 		
 		public void save() {
 			todoDetailVo.setParentSeq(parentSeq);
 			todoDetailVo.setDate(String.format("%04d-%02d-%02d", model.getYear(), (model.getMonth() + 1), model.getDay()));
 			todoDetailVo.setContents(textArea.getText());
+			
+			List<String> fileSeqs = new ArrayList<String>();
+			for(FileVo vo : fileList) {
+				fileSeqs.add(String.valueOf(vo.getSeq()));
+			}
+			todoDetailVo.setFileSeqs(String.join(",", fileSeqs));
 			
 			if(textArea.getText() != null && !textArea.getText().trim().equals("")) {
 				if(todoDetailVo.getSeq() == -1) {

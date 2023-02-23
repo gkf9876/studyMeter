@@ -28,6 +28,7 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 					+ "		, PARENT_SEQ"
 					+ "		, DATE"
 					+ "		, CONTENTS"
+					+ "		, FILE_SEQS"
 					+ "		, USE_YN"
 					+ "		, CREATE_DATE"
 					+ "	FROM"
@@ -49,6 +50,7 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 				vo.setParentSeq(rs.getInt("PARENT_SEQ"));
 				vo.setDate(rs.getString("DATE"));
 				vo.setContents(rs.getString("CONTENTS"));
+				vo.setFileSeqs(rs.getString("FILE_SEQS"));
 				vo.setUseYn(rs.getString("USE_YN"));
 				vo.setCreateDate(rs.getString("CREATE_DATE"));
 				result.add(vo);
@@ -74,9 +76,11 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 					+ "			PARENT_SEQ"
 					+ "			, DATE"
 					+ "			, CONTENTS"
+					+ "			, FILE_SEQS"
 					+ "			, USE_YN"
 					+ "		)VALUES("
 					+ "			?"
+					+ "			, ?"
 					+ "			, ?"
 					+ "			, ?"
 					+ "			, 'Y'"
@@ -85,6 +89,7 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 			pstmt.setInt(1, vo.getParentSeq());
 			pstmt.setString(2, vo.getDate());
 			pstmt.setString(3, vo.getContents());
+			pstmt.setString(4, vo.getFileSeqs());
 			
 			pstmt.executeUpdate();
 			
@@ -108,14 +113,16 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 					+ "	SET "
 					+ "		DATE = ?"
 					+ "		, CONTENTS = ?"
+					+ "		, FILE_SEQS = ?"
 					+ "		, USE_YN = ?"
 					+ "	WHERE "
 					+ "		SEQ = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getDate());
 			pstmt.setString(2, vo.getContents());
-			pstmt.setString(3, vo.getUseYn());
-			pstmt.setInt(4, vo.getSeq());
+			pstmt.setString(3, vo.getFileSeqs());
+			pstmt.setString(4, vo.getUseYn());
+			pstmt.setInt(5, vo.getSeq());
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

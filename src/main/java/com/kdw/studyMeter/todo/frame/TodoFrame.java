@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import com.kdw.studyMeter.file.service.FileService;
 import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.vo.TodoVo;
@@ -39,8 +40,9 @@ public class TodoFrame extends JFrame{
 	
 	private TodoService todoService;
 	private TodoDetailService todoDetailService;
+	private FileService fileService;
 	
-	public TodoFrame(final TodoService todoService, final TodoDetailService todoDetailService) {
+	public TodoFrame(final TodoService todoService, final TodoDetailService todoDetailService, final FileService fileService) {
 		this.setTitle("할일 목록");
 		this.setSize(650, 490);
 		this.setLayout(new BorderLayout());
@@ -49,6 +51,7 @@ public class TodoFrame extends JFrame{
 		
 		this.todoService = todoService;
 		this.todoDetailService = todoDetailService;
+		this.fileService = fileService;
 		
 		//할일 목록 출력
 		panel1 = new JPanel();
@@ -315,7 +318,7 @@ public class TodoFrame extends JFrame{
 			panel.add(button3);
 			
 			button4 = new JButton("상세");
-			todoDetailFrame = new TodoDetailFrame(todoVo.getSeq(), textField.getText(), todoDetailService);
+			todoDetailFrame = new TodoDetailFrame(todoVo.getSeq(), textField.getText(), todoDetailService, fileService);
 			button4.setBorder(BorderFactory.createLineBorder(Color.black));
 			button4.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

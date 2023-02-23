@@ -7,6 +7,7 @@ public class TodoDetailVo {
 	private String contents;
 	private String useYn;
 	private String createDate;
+	private String fileSeqs;
 	public int getSeq() {
 		return seq;
 	}
@@ -42,5 +43,11 @@ public class TodoDetailVo {
 	}
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+	public String getFileSeqs() {
+		return fileSeqs;
+	}
+	public void setFileSeqs(String fileSeqs) {
+		this.fileSeqs = fileSeqs;
 	}
 }

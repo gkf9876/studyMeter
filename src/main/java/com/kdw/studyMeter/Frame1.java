@@ -20,6 +20,7 @@ import javax.swing.Timer;
 
 import com.kdw.studyMeter.calendar.frame.CalendarFrame;
 import com.kdw.studyMeter.calendar.service.CalendarService;
+import com.kdw.studyMeter.file.service.FileService;
 import com.kdw.studyMeter.study.frame.Frame2;
 import com.kdw.studyMeter.study.service.StudyService;
 import com.kdw.studyMeter.study.vo.StudyVo;
@@ -71,7 +72,8 @@ public class Frame1 extends JFrame{
 	
 	private int seq = 0;
 	
-	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService, final CalendarService calendarService) {
+	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
+			, final CalendarService calendarService, final FileService fileService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -256,7 +258,7 @@ public class Frame1 extends JFrame{
 			});
 			panel14.add(button3);
 			
-			frame2 = new TodoFrame(todoService, todoDetailService);
+			frame2 = new TodoFrame(todoService, todoDetailService, fileService);
 			button4 = new JButton("할일");
 			button4.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
