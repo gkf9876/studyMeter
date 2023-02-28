@@ -294,10 +294,10 @@ public class TodoDetailFrame extends JFrame{
 				
 				for(final FileVo fileVo : fileList) {
 					JLabel label = new JLabel(fileVo.getFileName());
+					final TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
 					label.addMouseListener(new MouseListener() {
 		
 						public void mouseClicked(MouseEvent e) {
-							TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
 							frame.setVisible(true);
 						}
 		
