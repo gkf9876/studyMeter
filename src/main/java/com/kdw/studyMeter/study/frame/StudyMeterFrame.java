@@ -1,17 +1,27 @@
-package com.kdw.studyMeter;
+package com.kdw.studyMeter.study.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,47 +31,45 @@ import javax.swing.Timer;
 import com.kdw.studyMeter.calendar.frame.CalendarFrame;
 import com.kdw.studyMeter.calendar.service.CalendarService;
 import com.kdw.studyMeter.file.service.FileService;
-import com.kdw.studyMeter.study.frame.Frame2;
+import com.kdw.studyMeter.study.service.StudyListService;
 import com.kdw.studyMeter.study.service.StudyService;
+import com.kdw.studyMeter.study.vo.StudyListVo;
 import com.kdw.studyMeter.study.vo.StudyVo;
 import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
 import com.kdw.studyMeter.todo.dao.service.TodoService;
 import com.kdw.studyMeter.todo.frame.TodoFrame;
 
-public class Frame1 extends JFrame{
+public class StudyMeterFrame extends JFrame{
 	
 	private JFrame frame1;
-	private TodoFrame frame2;
-	private JFrame todoCalendarFrame;
+	private TodoFrame todoFrame;
+	private CalendarFrame calendarFrame;
+	private StudyListFrame studyListFrame;
+	
+	private JMenuBar menuBar;
+	private JMenu menu1;
+	private JMenuItem menuItem1;
+	private JMenuItem menuItem2;
+	private JMenuItem menuItem3;
+	private JMenuItem menuItem4;
 	
 	private JPanel panel1;
+	private JPanel panel10;
 	private JPanel panel11;
 	private JPanel panel12;
 	private JPanel panel13;
-	private JPanel panel14;
 	
 	private JLabel label1;
 	private JLabel label2;
 	private JLabel label3;
-	private JLabel label4;
 	
 	private JTextField textField1;
-	private JTextField textField2;
 	
-	private JTextField textField3;
-	private JTextField textField4;
-	
-	private JTextField textField5;
-	private JTextField textField6;
-	
-	private JTextField textField7;
-	private JTextField textField8;
+	private JComboBox comboBox1;
+	private ComboBoxModel comboBoxModel;
 	
 	private JButton button1;
 	private JButton button2;
-	private JButton button3;
-	private JButton button4;
-	private JButton button5;
 	
 	private DefaultListModel<String> model;
 	private JList<String> list1;
@@ -72,44 +80,101 @@ public class Frame1 extends JFrame{
 	
 	private int seq = 0;
 	
-	public Frame1(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
-			, final CalendarService calendarService, final FileService fileService) {
+	private StudyListService studyListService;
+	
+	public StudyMeterFrame(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
+			, final CalendarService calendarService, final FileService fileService, final StudyListService studyListService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		
+		this.studyListService = studyListService;
+		
+		menuBar = new JMenuBar();
+		menu1 = new JMenu("메뉴");
+		menuBar.add(menu1);
+		
+		menuItem1 = new JMenuItem("통계");
+		frame1 = new StudyChartFrame(studyService);
+		menuItem1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame1.setVisible(true);
+			}
+		});
+		menu1.add(menuItem1);
+
+		todoFrame = new TodoFrame(todoService, todoDetailService, fileService);
+		menuItem2 = new JMenuItem("할일");
+		menuItem2.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				todoFrame.init();
+				todoFrame.setVisible(true);
+			}
+			
+		});
+		menu1.add(menuItem2);
+
+		calendarFrame = new CalendarFrame(calendarService);
+		menuItem3 = new JMenuItem("캘린더");
+		menuItem3.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				calendarFrame.setVisible(true);
+			}
+			
+		});
+		menu1.add(menuItem3);
+		
+		studyListFrame = new StudyListFrame(studyListService, fileService);
+		menuItem4 = new JMenuItem("공부 목록");
+		menuItem4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				studyListFrame.setVisible(true);
+			}
+		});
+		menu1.add(menuItem4);
+		
+		this.setJMenuBar(menuBar);
+		
 		try {
 			panel1 = new JPanel();
-			panel11 = new JPanel();
+			
+			panel10 = new JPanel();
 			label1 = new JLabel();
 			label1.setText("공부제목");
-			panel11.add(label1);
+			panel10.add(label1);
 			
-			textField1 = new JTextField(10);
-			panel11.add(textField1);
-			
+			comboBox1 = new JComboBox();
+			comboBoxModel = new ComboBoxModel();
+			comboBox1.setModel(comboBoxModel);
+			comboBox1.setSelectedIndex(comboBoxModel.getSize() - 1);
+			panel10.add(comboBox1);
+			panel1.add(panel10);
+
+			panel11 = new JPanel();
 			label2 = new JLabel();
 			label2.setText("메모");
 			panel11.add(label2);
 			
-			textField2 = new JTextField(10);
-			panel11.add(textField2);
+			textField1 = new JTextField(24);
+			panel11.add(textField1);
 			
 			button1 = new JButton();
 			button1.setText("시작");
 			button1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(textField1.getText() != null && !textField1.getText().trim().equals("")) {
+					if(comboBox1.getSelectedItem().toString() != null && !comboBox1.getSelectedItem().toString().trim().equals("")) {
 						StudyVo vo = new StudyVo();
-						vo.setStudyNm(textField1.getText());
-						vo.setMemo(textField2.getText());
+						vo.setStudySeq(comboBoxModel.getSeq(comboBox1.getSelectedItem().toString()));
+						vo.setMemo(textField1.getText());
 						seq = studyService.insert(vo);
 						button1.setEnabled(false);
 						button2.setEnabled(true);
+						comboBox1.setEnabled(false);
 						textField1.setEnabled(false);
-						textField2.setEnabled(false);
 						
 						vo = new StudyVo();
 						vo.setSeq(seq);
@@ -124,7 +189,7 @@ public class Frame1 extends JFrame{
 						timer1.start();
 					}else {
 						JOptionPane.showMessageDialog(null, "공부 제목을 입력하세요.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-						textField1.requestFocus();
+						comboBox1.requestFocus();
 					}
 				}
 			});
@@ -139,8 +204,8 @@ public class Frame1 extends JFrame{
 					studyService.update(vo);
 					button1.setEnabled(true);
 					button2.setEnabled(false);
+					comboBox1.setEnabled(true);
 					textField1.setEnabled(true);
-					textField2.setEnabled(true);
 					
 					vo = new StudyVo();
 					vo.setSeq(seq);
@@ -165,34 +230,10 @@ public class Frame1 extends JFrame{
 			panel1.add(panel12, BorderLayout.CENTER);
 
 			panel13 = new JPanel();
-			textField3 = new JTextField(2);
-			textField3.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField3);
-			textField4 = new JTextField(2);
-			textField4.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField4);
-			
 			label3 = new JLabel();
-			label3.setText(":");
+			label3.setFont(new Font("Serif", Font.PLAIN, 50));
+			label3.setHorizontalAlignment(JTextField.CENTER);
 			panel13.add(label3);
-
-			textField5 = new JTextField(2);
-			textField5.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField5);
-			textField6 = new JTextField(2);
-			textField6.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField6);
-			
-			label4 = new JLabel();
-			label4.setText(":");
-			panel13.add(label4);
-
-			textField7 = new JTextField(2);
-			textField7.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField7);
-			textField8 = new JTextField(2);
-			textField8.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(textField8);
 			
 			timer1 = new Timer(1000, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -229,16 +270,9 @@ public class Frame1 extends JFrame{
 							}
 						}
 						
-						textField8.setText(String.valueOf(second % 10));
-						textField7.setText(String.valueOf(second / 10));
-	
-						textField6.setText(String.valueOf(min % 10));
-						textField5.setText(String.valueOf(min / 10));
-	
-						textField4.setText(String.valueOf(hour % 10));
-						textField3.setText(String.valueOf(hour / 10));
-						
-						System.out.println(String.format("%02d:%02d:%02d", hour, min, second));
+						String timeValue = String.format("%02d:%02d:%02d", hour, min, second);
+						label3.setText(timeValue);
+						System.out.println(timeValue);
 					
 					}catch(Exception exc) {
 						exc.printStackTrace();
@@ -248,43 +282,45 @@ public class Frame1 extends JFrame{
 
 			panel1.add(panel13);
 			
-			panel14 = new JPanel();
-			frame1 = new Frame2(studyService);
-			button3 = new JButton("통계");
-			button3.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					frame1.setVisible(true);
-				}
-			});
-			panel14.add(button3);
-			
-			frame2 = new TodoFrame(todoService, todoDetailService, fileService);
-			button4 = new JButton("할일");
-			button4.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					frame2.init();
-					frame2.setVisible(true);
-				}
-			});
-			panel14.add(button4);
-
-			todoCalendarFrame = new CalendarFrame(calendarService);
-			button5 = new JButton("캘린더");
-			button5.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					todoCalendarFrame.setVisible(true);
-				}
-			});
-			panel14.add(button5);
-			
-			panel1.add(panel14);
-			
 			this.add(panel1, BorderLayout.CENTER);
 			
 			this.setVisible(false);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+	
+	private class ComboBoxModel extends DefaultComboBoxModel<Object>{
+		
+		private Map<String, Integer> data;
+		private List<StudyListVo> studyList;
+		private String[] dataArr;
+		
+		public ComboBoxModel() {
+			data = new HashMap<String, Integer>();
+			StudyListVo studyListVo = new StudyListVo();
+			studyList = studyListService.select(studyListVo);
+			dataArr = new String[studyList.size()];
+			for(int i=0; i<studyList.size(); i++) {
+				StudyListVo vo = studyList.get(i);
+				dataArr[i] = vo.getStudyNm();
+				data.put(vo.getStudyNm(), vo.getSeq());
+			}
+		}
+		
+		@Override
+		public int getSize() {
+			return dataArr.length;
+		}
+		
+		@Override
+		public Object getElementAt(int index) {
+			return dataArr[index];
+		}
+		
+		public int getSeq(String studyNm) {
+			return data.get(studyNm);
 		}
 	}
 }

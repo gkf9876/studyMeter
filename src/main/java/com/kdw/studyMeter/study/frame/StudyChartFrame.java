@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 import com.kdw.studyMeter.study.service.StudyService;
 import com.kdw.studyMeter.study.vo.StudyVo;
 
-public class Frame2 extends JFrame{
+public class StudyChartFrame extends JFrame{
 	
 	private JPanel panel1;
 	private StudyService studyService;
 	
-	public Frame2(final StudyService studyService) {
+	public StudyChartFrame(final StudyService studyService) {
 		this.setTitle("공부량 통계");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());

@@ -29,17 +29,21 @@ public class StudyDaoImpl implements StudyDao{
 			ResultSet rs = stat.executeQuery(""
 					+ "	SELECT "
 					+ "		SEQ"
-					+ "		, STUDY_NM"
+					+ "		, STUDY_SEQ"
+					+ "		, (SELECT STUDY_TYPE FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_TYPE"
+					+ "		, (SELECT STUDY_NM FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_NM"
 					+ "		, START_DATE"
 					+ "		, END_DATE"
 					+ "		, MEMO"
 					+ "		, ((STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60) AS STUDY_TIME"
 					+ "	FROM "
-					+ "		TB_STUDY");
+					+ "		TB_STUDY A");
 			while(rs.next()) {
 				StudyVo vo = new StudyVo();
 				vo.setSeq(rs.getInt("SEQ"));
+				vo.setStudySeq(rs.getInt("STUDY_SEQ"));
 				vo.setStudyNm(rs.getString("STUDY_NAME"));
+				vo.setStudyType(rs.getString("STUDY_TYPE"));
 				vo.setStartDate(rs.getString("START_DATE"));
 				vo.setEndDate(rs.getString("END_DATE"));
 				vo.setMemo(rs.getString("MEMO"));
@@ -56,7 +60,19 @@ public class StudyDaoImpl implements StudyDao{
 		StudyVo result = new StudyVo();
 
 		try {
-			String sql = "SELECT * FROM TB_STUDY WHERE SEQ = ?";
+			String sql = ""
+					+ "	SELECT "
+					+ "		SEQ"
+					+ "		, STUDY_SEQ"
+					+ "		, (SELECT STUDY_TYPE FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_TYPE"
+					+ "		, (SELECT STUDY_NM FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_NM"
+					+ "		, START_DATE"
+					+ "		, END_DATE"
+					+ "		, MEMO"
+					+ "	FROM "
+					+ "		TB_STUDY A"
+					+ "	WHERE "
+					+ "		SEQ = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, vo.getSeq());
 			
@@ -64,7 +80,9 @@ public class StudyDaoImpl implements StudyDao{
 			
 			while(rs.next()) {
 				result.setSeq(rs.getInt("SEQ"));
+				result.setStudySeq(rs.getInt("STUDY_SEQ"));
 				result.setStudyNm(rs.getString("STUDY_NM"));
+				result.setStudyType(rs.getString("STUDY_TYPE"));
 				result.setStartDate(rs.getString("START_DATE"));
 				result.setEndDate(rs.getString("END_DATE"));
 				result.setMemo(rs.getString("MEMO"));
@@ -127,9 +145,22 @@ public class StudyDaoImpl implements StudyDao{
 	public int insert(StudyVo vo) {
 		int result = 0;
 		try {
-			String sql = "INSERT INTO TB_STUDY(STUDY_NM, START_DATE, END_DATE, MEMO) VALUES(?, DATETIME('now', 'localtime'), DATETIME('now', 'localtime'), ?)";
+			String sql = ""
+					+ "	INSERT INTO "
+					+ "		TB_STUDY("
+					+ "			STUDY_SEQ"
+					+ "			, START_DATE"
+					+ "			, END_DATE"
+					+ "			, MEMO"
+					+ "		) VALUES("
+					+ "			?"
+					+ "			, DATETIME('now', 'localtime')"
+					+ "			, DATETIME('now', 'localtime')"
+					+ "			, ?"
+					+ "		)";
+			
 			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, vo.getStudyNm());
+			pstmt.setInt(1, vo.getStudySeq());
 			pstmt.setString(2, vo.getMemo());
 			
 			pstmt.executeUpdate();

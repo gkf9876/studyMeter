@@ -6,10 +6,11 @@ public class StudyVo {
 	private String startDate;
 	private String endDate;
 	private String memo;
+	private int studySeq;
+	private String studyType;
 	
 	private String date;
 	private int studyMin;
-	
 	public int getSeq() {
 		return seq;
 	}
@@ -39,6 +40,18 @@ public class StudyVo {
 	}
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+	public int getStudySeq() {
+		return studySeq;
+	}
+	public void setStudySeq(int studySeq) {
+		this.studySeq = studySeq;
+	}
+	public String getStudyType() {
+		return studyType;
+	}
+	public void setStudyType(String studyType) {
+		this.studyType = studyType;
 	}
 	public String getDate() {
 		return date;

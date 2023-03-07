@@ -38,7 +38,7 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 					+ "		AND USE_YN = 'Y'"
 					+ "		AND PARENT_SEQ = ?"
 					+ "	ORDER BY"
-					+ "		DATE DESC"
+					+ "		DATE DESC, CREATE_DATE DESC"
 					+ "";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, todoDetailVo.getParentSeq());
