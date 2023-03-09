@@ -4,47 +4,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
 import com.kdw.studyMeter.todo.vo.TodoDetailVo;
-import com.kdw.studyMeter.todo.vo.TodoVo;
 
 public class TodoDetailDaoImpl implements TodoDetailDao{
-	private Connection conn = null;
+	private JdbcTemplate jdbcTemplate;
 	
-	public TodoDetailDaoImpl(Connection conn) {
-		this.conn = conn;
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
 	public List<TodoDetailVo> select(TodoDetailVo todoDetailVo) {
-		List<TodoDetailVo> result = new ArrayList<TodoDetailVo>();
-		
-		try {
-			String sql = ""
-					+ "	SELECT"
-					+ "		SEQ"
-					+ "		, PARENT_SEQ"
-					+ "		, DATE"
-					+ "		, CONTENTS"
-					+ "		, FILE_SEQS"
-					+ "		, USE_YN"
-					+ "		, CREATE_DATE"
-					+ "	FROM"
-					+ "		TB_TODO_DETAIL"
-					+ "	WHERE"
-					+ "		1=1"
-					+ "		AND USE_YN = 'Y'"
-					+ "		AND PARENT_SEQ = ?"
-					+ "	ORDER BY"
-					+ "		DATE DESC, CREATE_DATE DESC"
-					+ "";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, todoDetailVo.getParentSeq());
-			
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()) {
+		String sql = ""
+				+ "	SELECT"
+				+ "		SEQ"
+				+ "		, PARENT_SEQ"
+				+ "		, DATE"
+				+ "		, CONTENTS"
+				+ "		, FILE_SEQS"
+				+ "		, USE_YN"
+				+ "		, CREATE_DATE"
+				+ "	FROM"
+				+ "		TB_TODO_DETAIL"
+				+ "	WHERE"
+				+ "		1=1"
+				+ "		AND USE_YN = 'Y'"
+				+ "		AND PARENT_SEQ = ?"
+				+ "	ORDER BY"
+				+ "		DATE DESC, CREATE_DATE DESC"
+				+ "";
+
+		return this.jdbcTemplate.query(sql, new Object[] {todoDetailVo.getParentSeq()}, new RowMapper<TodoDetailVo>() {
+			public TodoDetailVo mapRow(ResultSet rs, int rowNum) throws SQLException {
 				TodoDetailVo vo = new TodoDetailVo();
 				vo.setSeq(rs.getInt("SEQ"));
 				vo.setParentSeq(rs.getInt("PARENT_SEQ"));
@@ -53,83 +53,56 @@ public class TodoDetailDaoImpl implements TodoDetailDao{
 				vo.setFileSeqs(rs.getString("FILE_SEQS"));
 				vo.setUseYn(rs.getString("USE_YN"));
 				vo.setCreateDate(rs.getString("CREATE_DATE"));
-				result.add(vo);
+				return vo;
 			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
+		});
 	}
 
-	public TodoDetailVo selectOne(TodoDetailVo vo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public int insert(final TodoDetailVo vo) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		final String sql = ""
+				+ "	INSERT INTO "
+				+ "		TB_TODO_DETAIL("
+				+ "			PARENT_SEQ"
+				+ "			, DATE"
+				+ "			, CONTENTS"
+				+ "			, FILE_SEQS"
+				+ "			, USE_YN"
+				+ "		)VALUES("
+				+ "			?"
+				+ "			, ?"
+				+ "			, ?"
+				+ "			, ?"
+				+ "			, 'Y'"
+				+ "		)";
 
-	public int insert(TodoDetailVo vo) {
-		int result = 0;
-		try {
-			String sql = ""
-					+ "	INSERT INTO "
-					+ "		TB_TODO_DETAIL("
-					+ "			PARENT_SEQ"
-					+ "			, DATE"
-					+ "			, CONTENTS"
-					+ "			, FILE_SEQS"
-					+ "			, USE_YN"
-					+ "		)VALUES("
-					+ "			?"
-					+ "			, ?"
-					+ "			, ?"
-					+ "			, ?"
-					+ "			, 'Y'"
-					+ "		)";
-			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setInt(1, vo.getParentSeq());
-			pstmt.setString(2, vo.getDate());
-			pstmt.setString(3, vo.getContents());
-			pstmt.setString(4, vo.getFileSeqs());
-			
-			pstmt.executeUpdate();
-			
-			ResultSet rs = pstmt.getGeneratedKeys();
-			rs.next();
-			vo.setSeq(rs.getInt("last_insert_rowid()"));
-			result = vo.getSeq();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		this.jdbcTemplate.update(new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+	            PreparedStatement pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, vo.getParentSeq());
+				pstmt.setString(2, vo.getDate());
+				pstmt.setString(3, vo.getContents());
+				pstmt.setString(4, vo.getFileSeqs());
+	            return pstmt;
+			}
+		}, keyHolder);
 		
-		return result;
+		return keyHolder.getKey().intValue();
 	}
 
 	public int update(TodoDetailVo vo) {
-		int result = -1;
-		try {
-			String sql = ""
-					+ "	UPDATE "
-					+ "		TB_TODO_DETAIL "
-					+ "	SET "
-					+ "		DATE = ?"
-					+ "		, CONTENTS = ?"
-					+ "		, FILE_SEQS = ?"
-					+ "		, USE_YN = ?"
-					+ "	WHERE "
-					+ "		SEQ = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, vo.getDate());
-			pstmt.setString(2, vo.getContents());
-			pstmt.setString(3, vo.getFileSeqs());
-			pstmt.setString(4, vo.getUseYn());
-			pstmt.setInt(5, vo.getSeq());
-			
-			result = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return result;
+		String sql = ""
+				+ "	UPDATE "
+				+ "		TB_TODO_DETAIL "
+				+ "	SET "
+				+ "		DATE = ?"
+				+ "		, CONTENTS = ?"
+				+ "		, FILE_SEQS = ?"
+				+ "		, USE_YN = ?"
+				+ "	WHERE "
+				+ "		SEQ = ?";
+
+		return this.jdbcTemplate.update(sql, new Object[]{vo.getDate(), vo.getContents(), vo.getFileSeqs(), vo.getUseYn(), vo.getSeq()});
 	}
 
 }

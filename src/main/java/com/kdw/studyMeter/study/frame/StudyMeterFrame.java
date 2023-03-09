@@ -1,6 +1,7 @@
 package com.kdw.studyMeter.study.frame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -56,8 +58,9 @@ public class StudyMeterFrame extends JFrame{
 	private JPanel panel1;
 	private JPanel panel10;
 	private JPanel panel11;
-	private JPanel panel12;
-	private JPanel panel13;
+	private JPanel panel2;
+	private JPanel panel20;
+	private JPanel panel21;
 	
 	private JLabel label1;
 	private JLabel label2;
@@ -88,7 +91,7 @@ public class StudyMeterFrame extends JFrame{
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		this.studyListService = studyListService;
 		
@@ -141,8 +144,11 @@ public class StudyMeterFrame extends JFrame{
 		
 		try {
 			panel1 = new JPanel();
+			panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+			panel1.setPreferredSize(new Dimension(450, 85));
 			
 			panel10 = new JPanel();
+			panel10.setBorder(BorderFactory.createLineBorder(Color.black));
 			label1 = new JLabel();
 			label1.setText("공부제목");
 			panel10.add(label1);
@@ -155,6 +161,7 @@ public class StudyMeterFrame extends JFrame{
 			panel1.add(panel10);
 
 			panel11 = new JPanel();
+			panel11.setBorder(BorderFactory.createLineBorder(Color.black));
 			label2 = new JLabel();
 			label2.setText("메모");
 			panel11.add(label2);
@@ -219,21 +226,24 @@ public class StudyMeterFrame extends JFrame{
 			button2.setEnabled(false);
 			panel11.add(button2);
 			panel1.add(panel11);
+			
+			this.add(panel1, BorderLayout.NORTH);
 
-			panel12 = new JPanel();
+			panel2 = new JPanel();
+			panel20 = new JPanel();
 			model = new DefaultListModel<String>();
 			list1 = new JList<String>(model);
 			scrollPane1 = new JScrollPane(list1);
 			scrollPane1.setPreferredSize(new Dimension(450, 120));
-			panel12.add(scrollPane1);
+			panel20.add(scrollPane1);
 			
-			panel1.add(panel12, BorderLayout.CENTER);
+			panel2.add(panel20, BorderLayout.CENTER);
 
-			panel13 = new JPanel();
+			panel21 = new JPanel();
 			label3 = new JLabel();
 			label3.setFont(new Font("Serif", Font.PLAIN, 50));
 			label3.setHorizontalAlignment(JTextField.CENTER);
-			panel13.add(label3);
+			panel21.add(label3);
 			
 			timer1 = new Timer(1000, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -280,9 +290,9 @@ public class StudyMeterFrame extends JFrame{
 				}
 			});
 
-			panel1.add(panel13);
+			panel2.add(panel21);
 			
-			this.add(panel1, BorderLayout.CENTER);
+			this.add(panel2, BorderLayout.CENTER);
 			
 			this.setVisible(false);
 		} catch (Exception e1) {

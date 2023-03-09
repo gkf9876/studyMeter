@@ -6,9 +6,11 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 import com.kdw.studyMeter.file.dao.FileDao;
 import com.kdw.studyMeter.file.dao.FileDaoImpl;
@@ -17,8 +19,9 @@ import com.kdw.studyMeter.file.vo.FileVo;
 public class FileService {
 	private FileDao dao;
 
-	public FileService(Connection conn){
-		dao = new FileDaoImpl(conn);
+	public FileService(){
+		ApplicationContext context = new GenericXmlApplicationContext("classpath*:**/applicationContext.xml");
+		this.dao = context.getBean("fileDao", FileDaoImpl.class);
 	}
 	
 	public FileVo selectOne(FileVo vo) {

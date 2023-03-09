@@ -1,8 +1,13 @@
 package com.kdw.studyMeter.todo.dao.service;
 
-import java.sql.Connection;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+import com.kdw.studyMeter.study.dao.StudyDaoImpl;
 import com.kdw.studyMeter.todo.dao.TodoDao;
 import com.kdw.studyMeter.todo.dao.TodoDaoImpl;
 import com.kdw.studyMeter.todo.vo.TodoVo;
@@ -10,8 +15,9 @@ import com.kdw.studyMeter.todo.vo.TodoVo;
 public class TodoService {
 	private TodoDao dao;
 	
-	public TodoService(Connection conn){
-		dao = new TodoDaoImpl(conn);
+	public TodoService(){
+		ApplicationContext context = new GenericXmlApplicationContext("classpath*:**/applicationContext.xml");
+		this.dao = context.getBean("todoDao", TodoDaoImpl.class);
 	}
 
 	public List<TodoVo> select() {

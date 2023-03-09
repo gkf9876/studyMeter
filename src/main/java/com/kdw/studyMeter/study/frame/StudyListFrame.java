@@ -40,10 +40,10 @@ public class StudyListFrame extends JFrame{
 	
 	public StudyListFrame(final StudyListService studyListService, final FileService fileService) {
 		this.setTitle("공부 목록");
-		this.setSize(500, 380);
+		this.setSize(500, 440);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
-		//this.setResizable(false);
+		this.setResizable(false);
 		
 		this.studyListService = studyListService;
 		this.fileService = fileService;
