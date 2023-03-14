@@ -6,6 +6,7 @@ public class StudyListVo {
 	private String studyType;
 	private String createDate;
 	private String useYn;
+	private int fileSeq;
 	public int getSeq() {
 		return seq;
 	}
@@ -35,5 +36,11 @@ public class StudyListVo {
 	}
 	public void setUseYn(String useYn) {
 		this.useYn = useYn;
+	}
+	public int getFileSeq() {
+		return fileSeq;
+	}
+	public void setFileSeq(int fileSeq) {
+		this.fileSeq = fileSeq;
 	}
 }

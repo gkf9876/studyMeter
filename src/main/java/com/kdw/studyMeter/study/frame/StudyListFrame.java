@@ -136,6 +136,8 @@ public class StudyListFrame extends JFrame{
 		
 		private StudyListVo studyListVo;
 		
+		private StudyDetailFrame studyDetailFrame;
+		
 		public StudyListItem(int num, StudyListVo vo) {
 			this.studyListVo = vo;
 			
@@ -149,9 +151,15 @@ public class StudyListFrame extends JFrame{
 			textField2 = new JTextField(10);
 			textField2.setText(vo.getStudyType());
 			this.add(textField2);
-			
+
+			studyDetailFrame = new StudyDetailFrame(this.studyListVo.getSeq(), textField1.getText(), studyListService, fileService);
 			button1 = new JButton("상세");
 			button1.setBorder(BorderFactory.createLineBorder(Color.black));
+			button1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					studyDetailFrame.setVisible(true);
+				}
+			});
 			this.add(button1);
 		}
 		

@@ -31,6 +31,7 @@ public class StudyListDaoImpl implements StudyListDao{
 				+ "		, STUDY_TYPE"
 				+ "		, CREATE_DATE"
 				+ "		, USE_YN"
+				+ "		, FILE_SEQ"
 				+ "	FROM "
 				+ "		TB_STUDY_LIST"
 				+ "	WHERE"
@@ -46,6 +47,7 @@ public class StudyListDaoImpl implements StudyListDao{
 				vo.setStudyType(rs.getString("STUDY_TYPE"));
 				vo.setCreateDate(rs.getString("CREATE_DATE"));
 				vo.setUseYn(rs.getString("USE_YN"));
+				vo.setFileSeq(rs.getInt("FILE_SEQ"));
 				return vo;
 			}
 		});
@@ -68,6 +70,7 @@ public class StudyListDaoImpl implements StudyListDao{
 				vo.setStudyType(rs.getString("STUDY_TYPE"));
 				vo.setCreateDate(rs.getString("CREATE_DATE"));
 				vo.setUseYn(rs.getString("USE_YN"));
+				vo.setFileSeq(rs.getInt("FILE_SEQ"));
 				return vo;
 			}
 		});
@@ -105,9 +108,10 @@ public class StudyListDaoImpl implements StudyListDao{
 				+ "		STUDY_NM = ?"
 				+ "		, STUDY_TYPE = ?"
 				+ "		, USE_YN = ?"
+				+ "		, FILE_SEQ = ?"
 				+ "	WHERE "
 				+ "		SEQ = ?";
 
-		return this.jdbcTemplate.update(sql, new Object[] {vo.getStudyNm(), vo.getStudyType(),  vo.getUseYn(), vo.getSeq()});
+		return this.jdbcTemplate.update(sql, new Object[] {vo.getStudyNm(), vo.getStudyType(),  vo.getUseYn(), vo.getFileSeq(), vo.getSeq()});
 	}
 }
