@@ -44,7 +44,8 @@ public class StudyDetailFrame extends JFrame{
 		
 		this.studyListVo = new StudyListVo();
 		this.studyListVo.setSeq(seq);
-		this.studyListVo = studyListService.selectOne(this.studyListVo);
+		if(seq > -1)
+			this.studyListVo = studyListService.selectOne(this.studyListVo);
 		
 		int fileSeq = this.studyListVo.getFileSeq();
 		

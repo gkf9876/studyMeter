@@ -157,7 +157,11 @@ public class StudyListFrame extends JFrame{
 			button1.setBorder(BorderFactory.createLineBorder(Color.black));
 			button1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					studyDetailFrame.setVisible(true);
+					if(studyListVo != null && studyListVo.getSeq() > -1) {
+						studyDetailFrame.setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(null, "빈 항목의 상세입력은 할 수 없습니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 			this.add(button1);
