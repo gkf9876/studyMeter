@@ -1,0 +1,50 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="file">
+	<select id="selectOne" parameterType="com.kdw.studyMeter.file.vo.FileVo" resultType="com.kdw.studyMeter.file.vo.FileVo">
+		/* file.selectOne */
+		SELECT 
+			SEQ
+			, FILE_PATH
+			, FILE_NAME
+			, FILE_SIZE
+			, FILE_EXTNS
+			, USE_YN
+			, CREATE_DATE 
+		FROM 
+			TB_FILE 
+		WHERE 
+			1=1
+			AND USE_YN = 'Y'
+			AND SEQ = #{seq}
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.file.vo.FileVo">
+		/* file.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_FILE
+		</selectKey>
+		INSERT INTO 
+			TB_FILE(
+				FILE_PATH
+				, FILE_NAME
+				, FILE_SIZE
+				, FILE_EXTNS
+			) VALUES(
+				#{filePath}
+				, #{fileName}
+				, #{fileSize}
+				, #{fileExtns}
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.file.vo.FileVo">
+		/* file.update */
+		UPDATE 
+			TB_FILE 
+		SET 
+			FILE_PATH = #{filePath}
+			, USE_YN = #{useYn}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

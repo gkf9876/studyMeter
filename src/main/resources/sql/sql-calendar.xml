@@ -1,0 +1,36 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="calendar">
+	<select id="selectList" parameterType="com.kdw.studyMeter.calendar.vo.CalendarVo" resultType="com.kdw.studyMeter.calendar.vo.CalendarVo">
+		/* calendar.selectList */
+		SELECT
+			DATE
+			, CONTENTS
+		FROM (
+			SELECT
+				DATE
+				, '독서시간 : ' || SUM(STUDY_MIN) || '분' AS CONTENTS
+				, '1' AS ODR
+			FROM (
+				SELECT
+					(STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60 AS STUDY_MIN
+					, STRFTIME('%Y-%m-%d', START_DATE) DATE
+				FROM
+					TB_STUDY ts
+			) A
+			GROUP BY
+				DATE
+			UNION ALL
+			SELECT
+				DATE
+				, (SELECT SUBJECT FROM TB_TODO WHERE SEQ = A.PARENT_SEQ) CONTENTS
+				, '2' AS ODR
+			FROM
+				TB_TODO_DETAIL A
+		)
+		WHERE
+			1=1
+			AND STRFTIME('%Y-%m', DATE) = #{schYearMonthDate}
+		ORDER BY
+			DATE DESC, ODR ASC
+    </select>
+</mapper>

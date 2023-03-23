@@ -20,8 +20,8 @@ public class TodoService {
 		this.dao = context.getBean("todoDao", TodoDaoImpl.class);
 	}
 
-	public List<TodoVo> select() {
-		return dao.select();
+	public List<TodoVo> selectList(TodoVo vo) {
+		return dao.selectList(vo);
 	}
 
 	public TodoVo selectOne(TodoVo vo) {
@@ -34,9 +34,5 @@ public class TodoService {
 
 	public int update(TodoVo vo) {
 		return dao.update(vo);
-	}
-
-	public List<TodoVo> select(int parentSeq, int level) {
-		return dao.select(parentSeq, level);
 	}
 }

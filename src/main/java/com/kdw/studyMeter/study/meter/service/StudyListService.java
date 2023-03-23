@@ -20,8 +20,8 @@ public class StudyListService {
 		this.dao = context.getBean("studyListDao", StudyListDaoImpl.class);
 	}
 	
-	public List<StudyListVo> select(StudyListVo vo){
-		return dao.select();
+	public List<StudyListVo> selectList(StudyListVo vo){
+		return dao.selectList();
 	}
 	
 	public StudyListVo selectOne(StudyListVo vo) {

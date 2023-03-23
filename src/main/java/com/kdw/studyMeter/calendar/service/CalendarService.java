@@ -17,7 +17,7 @@ public class CalendarService {
 		this.dao = context.getBean("calendarDao", CalendarDaoImpl.class);
 	}
 	
-	public List<CalendarVo> select(CalendarVo vo){
-		return dao.select(vo);
+	public List<CalendarVo> selectList(CalendarVo vo){
+		return dao.selectList(vo);
 	}
 }

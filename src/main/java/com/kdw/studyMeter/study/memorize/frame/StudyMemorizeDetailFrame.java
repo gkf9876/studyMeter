@@ -136,7 +136,7 @@ public class StudyMemorizeDetailFrame extends JFrame{
 		StudyMemorizeDetailVo vo = new StudyMemorizeDetailVo();
 		vo.setSeq(-1);
 		vo.setParentSeq(parentSeq);
-		List<StudyMemorizeDetailVo> itemList = studyMemorizeDetailService.select(vo);
+		List<StudyMemorizeDetailVo> itemList = studyMemorizeDetailService.selectList(vo);
 		
 		if(itemList != null && itemList.size() > 0) {
 			for(StudyMemorizeDetailVo item : itemList) {

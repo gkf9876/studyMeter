@@ -17,8 +17,8 @@ public class StudyMemorizeDetailService {
 		this.dao = context.getBean("studyMemorizeDetailDao", StudyMemorizeDetailDaoImpl.class);
 	}
 
-	public List<StudyMemorizeDetailVo> select(StudyMemorizeDetailVo vo) {
-		return dao.select(vo);
+	public List<StudyMemorizeDetailVo> selectList(StudyMemorizeDetailVo vo) {
+		return dao.selectList(vo);
 	}
 
 	public int insert(StudyMemorizeDetailVo vo) {

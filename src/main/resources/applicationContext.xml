@@ -9,27 +9,43 @@
 		<property name="url" value="jdbc:sqlite:db"/>
 	</bean>
 	<bean id="studyDao" class="com.kdw.studyMeter.study.meter.dao.StudyDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="todoDao" class="com.kdw.studyMeter.todo.dao.TodoDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="todoDetailDao" class="com.kdw.studyMeter.todo.dao.TodoDetailDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="calendarDao" class="com.kdw.studyMeter.calendar.dao.CalendarDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="fileDao" class="com.kdw.studyMeter.file.dao.FileDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="studyListDao" class="com.kdw.studyMeter.study.meter.dao.StudyListDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="studyMemorizeDao" class="com.kdw.studyMeter.study.memorize.dao.StudyMemorizeDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
 	<bean id="studyMemorizeDetailDao" class="com.kdw.studyMeter.study.memorize.dao.StudyMemorizeDetailDaoImpl">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
+	
+    <!-- sqlSessionTemplate -->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+ 
+    <!-- sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:/mybatis/mybatis-config.xml" />
+        <property name="mapperLocations">
+	        <list> <!-- 여러 sql문을 받아오기 위해 list로 받아온다 -->
+	            <value>classpath:sql/*.xml</value>
+	        </list>
+        </property>
+    </bean>
 </beans>

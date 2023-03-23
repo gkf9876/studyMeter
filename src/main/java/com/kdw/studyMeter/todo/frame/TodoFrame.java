@@ -145,7 +145,10 @@ public class TodoFrame extends JFrame{
 			
 			//자식 항목 출력하기.
 			sonItemList = new ArrayList<TodoItem>();
-			List<TodoVo> sonItem = todoService.select(-1, 1);
+			TodoVo param = new TodoVo();
+			param.setParentSeq(-1);
+			param.setLevel(1);
+			List<TodoVo> sonItem = todoService.selectList(param);
 			if(sonItem.size() > 0) {
 				for(TodoVo vo : sonItem) {
 					TodoItem item = new TodoItem(vo);
@@ -336,7 +339,10 @@ public class TodoFrame extends JFrame{
 			this.add(panel);
 			
 			//자식 항목 출력하기.
-			List<TodoVo> sonItem = todoService.select(todoVo.getSeq(), todoVo.getLevel() + 1);
+			TodoVo param = new TodoVo();
+			param.setParentSeq(todoVo.getSeq());
+			param.setLevel(todoVo.getLevel() + 1);
+			List<TodoVo> sonItem = todoService.selectList(param);
 			sonItemList = new ArrayList<TodoItem>();
 			for(TodoVo sonvo : sonItem) {
 				TodoItem item = new TodoItem(sonvo);

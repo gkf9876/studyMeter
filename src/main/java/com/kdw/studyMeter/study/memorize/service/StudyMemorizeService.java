@@ -17,8 +17,8 @@ public class StudyMemorizeService {
 		this.dao = context.getBean("studyMemorizeDao", StudyMemorizeDaoImpl.class);
 	}
 
-	public List<StudyMemorizeVo> select() {
-		return dao.select();
+	public List<StudyMemorizeVo> selectList(StudyMemorizeVo vo) {
+		return dao.selectList(vo);
 	}
 
 	public StudyMemorizeVo selectOne(StudyMemorizeVo vo) {
@@ -31,9 +31,5 @@ public class StudyMemorizeService {
 
 	public int update(StudyMemorizeVo vo) {
 		return dao.update(vo);
-	}
-
-	public List<StudyMemorizeVo> select(int parentSeq, int level) {
-		return dao.select(parentSeq, level);
 	}
 }

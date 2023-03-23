@@ -1,0 +1,73 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="studyMemorize">
+	<select id="selectList" parameterType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo" resultType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo">
+		/* studyMemorize.selectList */
+		SELECT 
+			SEQ
+			, PARENT_SEQ
+			, LEVEL
+			, SUBJECT
+			, USE_YN
+			, CHECK_YN
+			, ODR
+			, CREATE_DATE
+		FROM 
+			TB_STUDY_MEMORIZE
+		WHERE
+			1=1
+			
+			<if test="parentSeq != 0">
+				AND PARENT_SEQ = #{parentSeq}
+			</if>
+			
+			<if test="level != 0">
+				AND LEVEL = #{level}
+			</if>
+			
+			AND USE_YN = 'Y'
+		ORDER BY
+			CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo" resultType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo">
+		/* studyMemorize.selectOne */
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo">
+		/* studyMemorize.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_STUDY_MEMORIZE
+		</selectKey>
+		INSERT INTO 
+			TB_STUDY_MEMORIZE(
+				PARENT_SEQ
+				, LEVEL
+				, SUBJECT
+				, USE_YN
+				, CHECK_YN
+				, ODR
+				, CREATE_DATE
+			)VALUES(
+				#{parentSeq}
+				, #{level}
+				, #{subject}
+				, 'Y'
+				, #{checkYn}
+				, #{odr}
+				, DATETIME('now', 'localtime')
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo">
+		/* studyMemorize.update */
+		UPDATE 
+			TB_STUDY_MEMORIZE 
+		SET 
+			SUBJECT = #{subject}
+			, CHECK_YN = #{checkYn}
+			, USE_YN = #{useYn}
+			, ODR = #{odr}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

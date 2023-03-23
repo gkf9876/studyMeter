@@ -20,8 +20,8 @@ public class TodoDetailService {
 		this.dao = context.getBean("todoDetailDao", TodoDetailDaoImpl.class);
 	}
 
-	public List<TodoDetailVo> select(TodoDetailVo vo) {
-		return dao.select(vo);
+	public List<TodoDetailVo> selectList(TodoDetailVo vo) {
+		return dao.selectList(vo);
 	}
 
 	public int insert(TodoDetailVo vo) {

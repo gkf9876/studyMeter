@@ -112,7 +112,7 @@ public class StudyListFrame extends JFrame{
 
 		StudyListVo vo = new StudyListVo();
 		vo.setSeq(-1);
-		List<StudyListVo> itemList = studyListService.select(vo);
+		List<StudyListVo> itemList = studyListService.selectList(vo);
 		
 		if(itemList != null && itemList.size() > 0) {
 			for(StudyListVo item : itemList) {

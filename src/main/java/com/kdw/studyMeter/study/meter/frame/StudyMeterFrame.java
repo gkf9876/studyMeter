@@ -325,7 +325,7 @@ public class StudyMeterFrame extends JFrame{
 		public ComboBoxModel() {
 			data = new HashMap<String, Integer>();
 			StudyListVo studyListVo = new StudyListVo();
-			studyList = studyListService.select(studyListVo);
+			studyList = studyListService.selectList(studyListVo);
 			dataArr = new String[studyList.size()];
 			for(int i=0; i<studyList.size(); i++) {
 				StudyListVo vo = studyList.get(i);

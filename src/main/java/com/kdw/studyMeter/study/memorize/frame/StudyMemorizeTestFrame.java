@@ -125,7 +125,7 @@ public class StudyMemorizeTestFrame extends JFrame{
 		StudyMemorizeDetailVo vo = new StudyMemorizeDetailVo();
 		vo.setSeq(-1);
 		vo.setParentSeq(parentSeq);
-		itemList = studyMemorizeDetailService.select(vo);
+		itemList = studyMemorizeDetailService.selectList(vo);
 		
 		label2.setText("(" + (stage + 1) + "/" + itemList.size() + ")");
 	}

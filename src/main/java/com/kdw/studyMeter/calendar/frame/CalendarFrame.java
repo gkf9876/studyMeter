@@ -124,7 +124,7 @@ public class CalendarFrame extends JFrame{
 		//공부시간, 할일 데이터 가져오기
 		CalendarVo calendarVo = new CalendarVo();
 		calendarVo.setSchYearMonthDate(String.format("%04d-%02d", year, (month + 1)));
-		List<CalendarVo> list = calendarService.select(calendarVo);
+		List<CalendarVo> list = calendarService.selectList(calendarVo);
 		Map<String, List<CalendarVo>> map = new HashMap<String, List<CalendarVo>>();
 		
 		for(CalendarVo vo : list) {

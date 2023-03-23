@@ -1,0 +1,90 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="study">
+	<select id="selectList" resultType="com.kdw.studyMeter.study.meter.vo.StudyVo">
+		/* study.selectList */
+		SELECT 
+			SEQ
+			, STUDY_SEQ
+			, (SELECT STUDY_TYPE FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_TYPE
+			, (SELECT STUDY_NM FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_NM
+			, START_DATE
+			, END_DATE
+			, MEMO
+			, ((STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60) AS STUDY_TIME
+		FROM 
+			TB_STUDY A
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.study.meter.vo.StudyVo" resultType="com.kdw.studyMeter.study.meter.vo.StudyVo">
+		/* study.selectOne */
+		SELECT 
+			SEQ
+			, STUDY_SEQ
+			, (SELECT STUDY_TYPE FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_TYPE
+			, (SELECT STUDY_NM FROM TB_STUDY_LIST WHERE SEQ = A.STUDY_SEQ) STUDY_NM
+			, START_DATE
+			, END_DATE
+			, MEMO
+		FROM 
+			TB_STUDY A
+		WHERE 
+			SEQ = #{seq}
+    </select>
+    
+	<select id="selectChart" parameterType="int" resultType="com.kdw.studyMeter.study.meter.vo.StudyVo">
+		/* study.selectChart */
+		SELECT
+			DATE
+			, STUDY_MIN
+			, ROWNUMBER
+		FROM (
+			SELECT
+				DATE
+				, SUM(STUDY_MIN) AS STUDY_MIN
+				, ROW_NUMBER() OVER(ORDER BY DATE DESC) ROWNUMBER
+			FROM (
+				SELECT
+					ts.*
+					, (STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60 AS STUDY_MIN
+					, STRFTIME('%Y.%m.%d', START_DATE) DATE
+				FROM
+					TB_STUDY ts
+			) A
+			GROUP BY
+				DATE
+			ORDER BY
+				DATE ASC
+		)
+		WHERE
+			ROWNUMBER <![CDATA[<=]]> #{rownumber}
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.study.meter.vo.StudyVo">
+		/* study.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_STUDY
+		</selectKey>
+		INSERT INTO
+			TB_STUDY(
+				STUDY_SEQ ,
+				START_DATE ,
+				END_DATE ,
+				MEMO 
+			)VALUES( 
+				#{studySeq} ,
+				DATETIME('now', 'localtime') ,
+				DATETIME('now', 'localtime') ,
+				#{memo} 
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.study.meter.vo.StudyVo">
+		/* study.update */
+		UPDATE 
+			TB_STUDY 
+		SET 
+			END_DATE = DATETIME('now', 'localtime')
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

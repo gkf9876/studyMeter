@@ -121,7 +121,7 @@ public class TodoDetailFrame extends JFrame{
 		TodoDetailVo vo = new TodoDetailVo();
 		vo.setSeq(-1);
 		vo.setParentSeq(parentSeq);
-		List<TodoDetailVo> itemList = todoDetailService.select(vo);
+		List<TodoDetailVo> itemList = todoDetailService.selectList(vo);
 		
 		if(itemList != null && itemList.size() > 0) {
 			for(TodoDetailVo item : itemList) {

@@ -1,0 +1,60 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="todoDetail">
+	<select id="selectList" parameterType="com.kdw.studyMeter.todo.vo.TodoDetailVo" resultType="com.kdw.studyMeter.todo.vo.TodoDetailVo">
+		/* todoDetail.selectList */
+		SELECT
+			SEQ
+			, PARENT_SEQ
+			, DATE
+			, CONTENTS
+			, FILE_SEQS
+			, USE_YN
+			, CREATE_DATE
+		FROM
+			TB_TODO_DETAIL
+		WHERE
+			1=1
+			AND USE_YN = 'Y'
+			AND PARENT_SEQ = #{parentSeq}
+		ORDER BY
+			DATE DESC, CREATE_DATE DESC
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.todo.vo.TodoDetailVo" resultType="com.kdw.studyMeter.todo.vo.TodoDetailVo">
+		/* todoDetail.selectOne */
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.todo.vo.TodoDetailVo">
+		/* todoDetail.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_TODO_DETAIL
+		</selectKey>
+		INSERT INTO 
+			TB_TODO_DETAIL(
+				PARENT_SEQ
+				, DATE
+				, CONTENTS
+				, FILE_SEQS
+				, USE_YN
+			)VALUES(
+				#{parentSeq}
+				, #{date}
+				, #{contents}
+				, #{fileSeqs}
+				, 'Y'
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.todo.vo.TodoDetailVo">
+		/* todoDetail.update */
+		UPDATE 
+			TB_TODO_DETAIL 
+		SET 
+			DATE = #{date}
+			, CONTENTS = #{contents}
+			, FILE_SEQS = #{fileSeqs}
+			, USE_YN = #{useYn}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

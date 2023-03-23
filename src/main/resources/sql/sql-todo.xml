@@ -1,0 +1,73 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="todo">
+	<select id="selectList" parameterType="com.kdw.studyMeter.todo.vo.TodoVo" resultType="com.kdw.studyMeter.todo.vo.TodoVo">
+		/* todo.selectList */
+		SELECT 
+			SEQ
+			, PARENT_SEQ
+			, LEVEL
+			, SUBJECT
+			, USE_YN
+			, CHECK_YN
+			, ODR
+			, CREATE_DATE
+		FROM 
+			TB_TODO
+		WHERE
+			1=1
+			
+			<if test="parentSeq != 0">
+				AND PARENT_SEQ = #{parentSeq}
+			</if>
+			
+			<if test="level != 0">
+				AND LEVEL = #{level}
+			</if>
+			
+			AND USE_YN = 'Y'
+		ORDER BY
+			CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.todo.vo.TodoVo" resultType="com.kdw.studyMeter.todo.vo.TodoVo">
+		/* todo.selectOne */
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.todo.vo.TodoVo">
+		/* todo.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_TODO
+		</selectKey>
+		INSERT INTO 
+			TB_TODO(
+				PARENT_SEQ
+				, LEVEL
+				, SUBJECT
+				, USE_YN
+				, CHECK_YN
+				, ODR
+				, CREATE_DATE
+			)VALUES(
+				#{parentSeq}
+				, #{level}
+				, #{subject}
+				, 'Y'
+				, #{checkYn}
+				, #{odr}
+				, DATETIME('now', 'localtime')
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.todo.vo.TodoVo">
+		/* todo.update */
+		UPDATE 
+			TB_TODO 
+		SET 
+			SUBJECT = #{subject}
+			, CHECK_YN = #{checkYn}
+			, USE_YN = #{useYn}
+			, ODR = #{odr}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

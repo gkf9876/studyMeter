@@ -145,7 +145,10 @@ public class StudyMemorizeFrame extends JFrame{
 			
 			//자식 항목 출력하기.
 			sonItemList = new ArrayList<StudyMemorizeItem>();
-			List<StudyMemorizeVo> sonItem = studyMemorizeService.select(-1, 1);
+			StudyMemorizeVo param = new StudyMemorizeVo();
+			param.setParentSeq(-1);
+			param.setLevel(1);
+			List<StudyMemorizeVo> sonItem = studyMemorizeService.selectList(param);
 			if(sonItem.size() > 0) {
 				for(StudyMemorizeVo vo : sonItem) {
 					StudyMemorizeItem item = new StudyMemorizeItem(vo);
@@ -336,7 +339,10 @@ public class StudyMemorizeFrame extends JFrame{
 			this.add(panel);
 			
 			//자식 항목 출력하기.
-			List<StudyMemorizeVo> sonItem = studyMemorizeService.select(studyMemorizeVo.getSeq(), studyMemorizeVo.getLevel() + 1);
+			StudyMemorizeVo param = new StudyMemorizeVo();
+			param.setParentSeq(studyMemorizeVo.getSeq());
+			param.setLevel(studyMemorizeVo.getLevel() + 1);
+			List<StudyMemorizeVo> sonItem = studyMemorizeService.selectList(param);
 			sonItemList = new ArrayList<StudyMemorizeItem>();
 			for(StudyMemorizeVo sonvo : sonItem) {
 				StudyMemorizeItem item = new StudyMemorizeItem(sonvo);

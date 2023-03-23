@@ -1,0 +1,57 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="studyList">
+	<select id="selectList" parameterType="com.kdw.studyMeter.study.meter.vo.StudyListVo" resultType="com.kdw.studyMeter.study.meter.vo.StudyListVo">
+		/* studyList.selectList */
+		SELECT 
+			SEQ
+			, STUDY_NM
+			, STUDY_TYPE
+			, CREATE_DATE
+			, USE_YN
+			, FILE_SEQ
+		FROM 
+			TB_STUDY_LIST
+		WHERE
+			USE_YN = 'Y'
+		ORDER BY
+			CREATE_DATE ASC
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.study.meter.vo.StudyListVo" resultType="com.kdw.studyMeter.study.meter.vo.StudyListVo">
+		/* studyList.selectOne */
+		SELECT 
+			* 
+		FROM 
+			TB_STUDY_LIST 
+		WHERE 
+			SEQ = #{seq}
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.study.meter.vo.StudyListVo">
+		/* studyList.insert */
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MAX(SEQ) + 1 FROM TB_STUDY_LIST
+		</selectKey>
+		INSERT INTO 
+			TB_STUDY_LIST(
+				STUDY_NM
+				, STUDY_TYPE
+			) VALUES(
+				#{studyNm}
+				, #{studyType}
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.study.meter.vo.StudyListVo">
+		/* studyList.update */
+		UPDATE 
+			TB_STUDY_LIST 
+		SET 
+			STUDY_NM = #{studyNm}
+			, STUDY_TYPE = #{studyType}
+			, USE_YN = #{useYn}
+			, FILE_SEQ = #{fileSeq}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>
