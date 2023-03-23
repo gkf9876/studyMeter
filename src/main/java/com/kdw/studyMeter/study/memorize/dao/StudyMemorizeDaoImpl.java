@@ -1,11 +1,9 @@
-package com.kdw.studyMeter.todo.dao;
+package com.kdw.studyMeter.study.memorize.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -16,17 +14,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.kdw.studyMeter.study.meter.vo.StudyVo;
-import com.kdw.studyMeter.todo.vo.TodoVo;
+import com.kdw.studyMeter.study.memorize.vo.StudyMemorizeVo;
 
-public class TodoDaoImpl implements TodoDao{
+public class StudyMemorizeDaoImpl implements StudyMemorizeDao{
 	private JdbcTemplate jdbcTemplate;
 	
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	public List<TodoVo> select() {
+	public List<StudyMemorizeVo> select() {
 			String sql = ""
 					+ "	SELECT "
 					+ "		SEQ"
@@ -38,7 +35,7 @@ public class TodoDaoImpl implements TodoDao{
 					+ "		, ODR"
 					+ "		, CREATE_DATE"
 					+ "	FROM "
-					+ "		TB_TODO"
+					+ "		TB_STUDY_MEMORIZE"
 					+ "	WHERE"
 					+ "		1=1"
 					+ "		AND USE_YN = 'Y'"
@@ -46,9 +43,9 @@ public class TodoDaoImpl implements TodoDao{
 					+ "		CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC"
 					+ "";
 
-			return this.jdbcTemplate.query(sql, new RowMapper<TodoVo>() {
-				public TodoVo mapRow(ResultSet rs, int rowNum) throws SQLException {
-					TodoVo vo = new TodoVo();
+			return this.jdbcTemplate.query(sql, new RowMapper<StudyMemorizeVo>() {
+				public StudyMemorizeVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+					StudyMemorizeVo vo = new StudyMemorizeVo();
 					vo.setSeq(rs.getInt("SEQ"));
 					vo.setParentSeq(rs.getInt("PARENT_SEQ"));
 					vo.setLevel(rs.getInt("LEVEL"));
@@ -62,16 +59,16 @@ public class TodoDaoImpl implements TodoDao{
 			});
 	}
 
-	public TodoVo selectOne(TodoVo vo) {
+	public StudyMemorizeVo selectOne(StudyMemorizeVo vo) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public int insert(final TodoVo vo) {
+	public int insert(final StudyMemorizeVo vo) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		final String sql = ""
 				+ "	INSERT INTO "
-				+ "		TB_TODO("
+				+ "		TB_STUDY_MEMORIZE("
 				+ "			PARENT_SEQ"
 				+ "			, LEVEL"
 				+ "			, SUBJECT"
@@ -104,10 +101,10 @@ public class TodoDaoImpl implements TodoDao{
 		return keyHolder.getKey().intValue();
 	}
 
-	public int update(TodoVo vo) {
+	public int update(StudyMemorizeVo vo) {
 		String sql = ""
 				+ "	UPDATE "
-				+ "		TB_TODO "
+				+ "		TB_STUDY_MEMORIZE "
 				+ "	SET "
 				+ "		SUBJECT = ?"
 				+ "		, CHECK_YN = ?"
@@ -119,7 +116,7 @@ public class TodoDaoImpl implements TodoDao{
 		return this.jdbcTemplate.update(sql, new Object[]{vo.getSubject(), vo.getCheckYn(), vo.getUseYn(), vo.getOdr(), vo.getSeq()});
 	}
 
-	public List<TodoVo> select(int parentSeq, int level) {
+	public List<StudyMemorizeVo> select(int parentSeq, int level) {
 		String sql = ""
 				+ "	SELECT "
 				+ "		SEQ"
@@ -131,7 +128,7 @@ public class TodoDaoImpl implements TodoDao{
 				+ "		, ODR"
 				+ "		, CREATE_DATE"
 				+ "	FROM "
-				+ "		TB_TODO"
+				+ "		TB_STUDY_MEMORIZE"
 				+ "	WHERE"
 				+ "		1=1"
 				+ "		AND PARENT_SEQ = ?"
@@ -141,9 +138,9 @@ public class TodoDaoImpl implements TodoDao{
 				+ "		CASE WHEN CHECK_YN = 'Y' THEN '2' WHEN CHECK_YN = 'N' THEN '1' ELSE '0' END ASC, ODR ASC"
 				+ "";
 
-		return this.jdbcTemplate.query(sql, new Object[] {parentSeq, level}, new RowMapper<TodoVo>() {
-			public TodoVo mapRow(ResultSet rs, int rowNum) throws SQLException {
-				TodoVo vo = new TodoVo();
+		return this.jdbcTemplate.query(sql, new Object[] {parentSeq, level}, new RowMapper<StudyMemorizeVo>() {
+			public StudyMemorizeVo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				StudyMemorizeVo vo = new StudyMemorizeVo();
 				vo.setSeq(rs.getInt("SEQ"));
 				vo.setParentSeq(rs.getInt("PARENT_SEQ"));
 				vo.setLevel(rs.getInt("LEVEL"));

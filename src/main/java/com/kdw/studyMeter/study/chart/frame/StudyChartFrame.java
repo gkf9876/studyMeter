@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.frame;
+package com.kdw.studyMeter.study.chart.frame;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -13,8 +13,8 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.kdw.studyMeter.study.service.StudyService;
-import com.kdw.studyMeter.study.vo.StudyVo;
+import com.kdw.studyMeter.study.meter.service.StudyService;
+import com.kdw.studyMeter.study.meter.vo.StudyVo;
 
 public class StudyChartFrame extends JFrame{
 	

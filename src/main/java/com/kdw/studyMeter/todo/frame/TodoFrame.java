@@ -20,8 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.kdw.studyMeter.file.service.FileService;
-import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
-import com.kdw.studyMeter.todo.dao.service.TodoService;
+import com.kdw.studyMeter.todo.service.TodoDetailService;
+import com.kdw.studyMeter.todo.service.TodoService;
 import com.kdw.studyMeter.todo.vo.TodoVo;
 
 public class TodoFrame extends JFrame{
@@ -157,6 +157,7 @@ public class TodoFrame extends JFrame{
 				vo.setSeq(-1);
 				vo.setParentSeq(-1);
 				vo.setLevel(1);
+				vo.setOdr(1);
 				TodoItem item = new TodoItem(vo);
 				sonItemList.add(item);
 				this.add(item);
@@ -323,6 +324,7 @@ public class TodoFrame extends JFrame{
 			button4.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(todoVo != null && todoVo.getSeq() > -1) {
+						todoDetailFrame.init();
 						todoDetailFrame.setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(null, "빈 항목의 상세입력은 할 수 없습니다.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
@@ -344,7 +346,7 @@ public class TodoFrame extends JFrame{
 		}
 		
 		public void save() {
-			if(this.todoVo != null) {
+			if(this.todoVo != null && textField.getText() != null && !textField.getText().trim().equals("")) {
 				this.todoVo.setCheckYn((checkBox.isSelected())? "Y" : "N");
 				this.todoVo.setSubject(textField.getText());
 				
@@ -352,7 +354,8 @@ public class TodoFrame extends JFrame{
 				if(this.todoVo.getSeq() != -1) {
 					todoService.update(this.todoVo);
 				}else {
-					todoService.insert(this.todoVo);
+					int seq = todoService.insert(this.todoVo);
+					this.todoVo.setSeq(seq);
 				}
 			}
 			

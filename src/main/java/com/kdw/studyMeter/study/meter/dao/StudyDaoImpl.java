@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.dao;
+package com.kdw.studyMeter.study.meter.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.kdw.studyMeter.study.vo.StudyVo;
+import com.kdw.studyMeter.study.meter.vo.StudyVo;
 
 public class StudyDaoImpl implements StudyDao{
 	private JdbcTemplate jdbcTemplate;

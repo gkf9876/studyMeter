@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.frame;
+package com.kdw.studyMeter.study.meter.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,8 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.kdw.studyMeter.file.service.FileService;
-import com.kdw.studyMeter.study.service.StudyListService;
-import com.kdw.studyMeter.study.vo.StudyListVo;
+import com.kdw.studyMeter.study.meter.service.StudyListService;
+import com.kdw.studyMeter.study.meter.vo.StudyListVo;
 
 public class StudyListFrame extends JFrame{
 	
@@ -106,7 +106,7 @@ public class StudyListFrame extends JFrame{
 		this.add(panel2, BorderLayout.SOUTH);
 	}
 	
-	private void init() {
+	public void init() {
 		num = 1;
 		panel11.removeAll();
 

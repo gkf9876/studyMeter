@@ -1,8 +1,8 @@
-package com.kdw.studyMeter.study.dao;
+package com.kdw.studyMeter.study.meter.dao;
 
 import java.util.List;
 
-import com.kdw.studyMeter.study.vo.StudyVo;
+import com.kdw.studyMeter.study.meter.vo.StudyVo;
 
 public interface StudyDao {
 	public List<StudyVo> select();

@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.todo.dao.service;
+package com.kdw.studyMeter.todo.service;
 
 import java.util.List;
 

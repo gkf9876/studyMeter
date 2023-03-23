@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.frame;
+package com.kdw.studyMeter.study.meter.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,13 +33,17 @@ import javax.swing.Timer;
 import com.kdw.studyMeter.calendar.frame.CalendarFrame;
 import com.kdw.studyMeter.calendar.service.CalendarService;
 import com.kdw.studyMeter.file.service.FileService;
-import com.kdw.studyMeter.study.service.StudyListService;
-import com.kdw.studyMeter.study.service.StudyService;
-import com.kdw.studyMeter.study.vo.StudyListVo;
-import com.kdw.studyMeter.study.vo.StudyVo;
-import com.kdw.studyMeter.todo.dao.service.TodoDetailService;
-import com.kdw.studyMeter.todo.dao.service.TodoService;
+import com.kdw.studyMeter.study.chart.frame.StudyChartFrame;
+import com.kdw.studyMeter.study.memorize.frame.StudyMemorizeFrame;
+import com.kdw.studyMeter.study.memorize.service.StudyMemorizeDetailService;
+import com.kdw.studyMeter.study.memorize.service.StudyMemorizeService;
+import com.kdw.studyMeter.study.meter.service.StudyListService;
+import com.kdw.studyMeter.study.meter.service.StudyService;
+import com.kdw.studyMeter.study.meter.vo.StudyListVo;
+import com.kdw.studyMeter.study.meter.vo.StudyVo;
 import com.kdw.studyMeter.todo.frame.TodoFrame;
+import com.kdw.studyMeter.todo.service.TodoDetailService;
+import com.kdw.studyMeter.todo.service.TodoService;
 
 public class StudyMeterFrame extends JFrame{
 	
@@ -47,6 +51,7 @@ public class StudyMeterFrame extends JFrame{
 	private TodoFrame todoFrame;
 	private CalendarFrame calendarFrame;
 	private StudyListFrame studyListFrame;
+	private StudyMemorizeFrame studyMemorizeFrame;
 	
 	private JMenuBar menuBar;
 	private JMenu menu1;
@@ -54,6 +59,7 @@ public class StudyMeterFrame extends JFrame{
 	private JMenuItem menuItem2;
 	private JMenuItem menuItem3;
 	private JMenuItem menuItem4;
+	private JMenuItem menuItem5;
 	
 	private JPanel panel1;
 	private JPanel panel10;
@@ -86,7 +92,8 @@ public class StudyMeterFrame extends JFrame{
 	private StudyListService studyListService;
 	
 	public StudyMeterFrame(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
-			, final CalendarService calendarService, final FileService fileService, final StudyListService studyListService) {
+			, final CalendarService calendarService, final FileService fileService, final StudyListService studyListService
+			, final StudyMemorizeService studyMemorizeService, final StudyMemorizeDetailService studyMemorizeDetailService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -111,7 +118,6 @@ public class StudyMeterFrame extends JFrame{
 		todoFrame = new TodoFrame(todoService, todoDetailService, fileService);
 		menuItem2 = new JMenuItem("할일");
 		menuItem2.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				todoFrame.init();
 				todoFrame.setVisible(true);
@@ -123,11 +129,9 @@ public class StudyMeterFrame extends JFrame{
 		calendarFrame = new CalendarFrame(calendarService);
 		menuItem3 = new JMenuItem("캘린더");
 		menuItem3.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				calendarFrame.setVisible(true);
 			}
-			
 		});
 		menu1.add(menuItem3);
 		
@@ -135,10 +139,21 @@ public class StudyMeterFrame extends JFrame{
 		menuItem4 = new JMenuItem("공부 목록");
 		menuItem4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				studyListFrame.init();
 				studyListFrame.setVisible(true);
 			}
 		});
 		menu1.add(menuItem4);
+
+		studyMemorizeFrame = new StudyMemorizeFrame(studyMemorizeService, studyMemorizeDetailService, fileService);
+		menuItem5 = new JMenuItem("암기 목록");
+		menuItem5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				studyMemorizeFrame.init();
+				studyMemorizeFrame.setVisible(true);
+			}
+		});
+		menu1.add(menuItem5);
 		
 		this.setJMenuBar(menuBar);
 		

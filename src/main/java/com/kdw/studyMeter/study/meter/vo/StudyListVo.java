@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.vo;
+package com.kdw.studyMeter.study.meter.vo;
 
 public class StudyListVo {
 	private int seq;

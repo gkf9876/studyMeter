@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.todo.dao.service;
+package com.kdw.studyMeter.todo.service;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-import com.kdw.studyMeter.study.dao.StudyDaoImpl;
+import com.kdw.studyMeter.study.meter.dao.StudyDaoImpl;
 import com.kdw.studyMeter.todo.dao.TodoDao;
 import com.kdw.studyMeter.todo.dao.TodoDaoImpl;
 import com.kdw.studyMeter.todo.vo.TodoVo;

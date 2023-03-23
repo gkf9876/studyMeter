@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.frame;
+package com.kdw.studyMeter.study.meter.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 
 import com.kdw.studyMeter.file.service.FileService;
 import com.kdw.studyMeter.file.vo.FileVo;
-import com.kdw.studyMeter.study.service.StudyListService;
-import com.kdw.studyMeter.study.vo.StudyListVo;
+import com.kdw.studyMeter.study.meter.service.StudyListService;
+import com.kdw.studyMeter.study.meter.vo.StudyListVo;
 
 public class StudyDetailFrame extends JFrame{
 	private JPanel panel1;

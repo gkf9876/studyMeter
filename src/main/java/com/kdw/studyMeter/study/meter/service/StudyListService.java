@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.study.service;
+package com.kdw.studyMeter.study.meter.service;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import com.kdw.studyMeter.file.dao.FileDaoImpl;
-import com.kdw.studyMeter.study.dao.StudyListDao;
-import com.kdw.studyMeter.study.dao.StudyListDaoImpl;
-import com.kdw.studyMeter.study.vo.StudyListVo;
+import com.kdw.studyMeter.study.meter.dao.StudyListDao;
+import com.kdw.studyMeter.study.meter.dao.StudyListDaoImpl;
+import com.kdw.studyMeter.study.meter.vo.StudyListVo;
 
 public class StudyListService {
 	private StudyListDao dao;

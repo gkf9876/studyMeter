@@ -1,4 +1,4 @@
-package com.kdw.studyMeter.todo.frame;
+package com.kdw.studyMeter.study.memorize.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -26,14 +26,15 @@ import javax.swing.JTextArea;
 
 import com.kdw.studyMeter.file.service.FileService;
 import com.kdw.studyMeter.file.vo.FileVo;
-import com.kdw.studyMeter.todo.service.TodoDetailService;
-import com.kdw.studyMeter.todo.vo.TodoDetailVo;
+import com.kdw.studyMeter.study.memorize.service.StudyMemorizeDetailService;
+import com.kdw.studyMeter.study.memorize.vo.StudyMemorizeDetailVo;
+import com.kdw.studyMeter.todo.frame.TodoDetailImageFrame;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
-public class TodoDetailFrame extends JFrame{
+public class StudyMemorizeDetailFrame extends JFrame{
 	
 	private JPanel panel1;
 	private JPanel panel11;
@@ -44,24 +45,27 @@ public class TodoDetailFrame extends JFrame{
 	
 	private JButton button1;
 	private JButton button2;
+	private JButton button3;
 	
 	//할일 상세내용 목록
-	private TodoDetailItem todoDetailItem;
+	private StudyMemorizeDetailItem studyMemorizeDetailItem;
 	
-	private TodoDetailService todoDetailService;
+	private StudyMemorizeDetailService studyMemorizeDetailService;
 	
 	private FileService fileService;
 	
 	private int parentSeq;
 	
-	public TodoDetailFrame(int parentSeq, String title, final TodoDetailService todoDetailService, final FileService fileService) {
+	private StudyMemorizeTestFrame studyMemorizeTestFrame;
+	
+	public StudyMemorizeDetailFrame(int parentSeq, String title, final StudyMemorizeDetailService studyMemorizeDetailService, final FileService fileService) {
 		this.setTitle(title);
 		this.setSize(650, 550);
 		this.setLayout(new BorderLayout());
 		
 		this.parentSeq = parentSeq;
 		
-		this.todoDetailService = todoDetailService;
+		this.studyMemorizeDetailService = studyMemorizeDetailService;
 		this.fileService = fileService;
 		
 		panel1 = new JPanel();
@@ -86,7 +90,7 @@ public class TodoDetailFrame extends JFrame{
 				//화면데이터 할일목록에 저장.
 				Component[] comps = panel11.getComponents();
 				for(int i=0; i<comps.length; i++) {
-					TodoDetailItem panel = (TodoDetailItem)comps[i];
+					StudyMemorizeDetailItem panel = (StudyMemorizeDetailItem)comps[i];
 					panel.save();
 				}
 				
@@ -99,11 +103,11 @@ public class TodoDetailFrame extends JFrame{
 		button2 = new JButton("추가");
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TodoDetailVo vo = new TodoDetailVo();
+				StudyMemorizeDetailVo vo = new StudyMemorizeDetailVo();
 				vo.setSeq(-1);
 				vo.setParentSeq(-1);
 				
-				JPanel panel = new TodoDetailItem(vo);
+				JPanel panel = new StudyMemorizeDetailItem(vo);
 				panel11.add(panel);
 				
 				panel1.revalidate();
@@ -111,6 +115,17 @@ public class TodoDetailFrame extends JFrame{
 			}
 		});
 		panel2.add(button2);
+		
+		studyMemorizeTestFrame = new StudyMemorizeTestFrame(parentSeq, title + " 암기하기", studyMemorizeDetailService);
+		button3 = new JButton("암기하기");
+		button3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				studyMemorizeTestFrame.init();
+				studyMemorizeTestFrame.setVisible(true);
+			}
+		});
+		panel2.add(button3);
+		
 		this.add(panel2, BorderLayout.SOUTH);
 	}
 	
@@ -118,26 +133,26 @@ public class TodoDetailFrame extends JFrame{
 	public void init() {
 		panel11.removeAll();
 
-		TodoDetailVo vo = new TodoDetailVo();
+		StudyMemorizeDetailVo vo = new StudyMemorizeDetailVo();
 		vo.setSeq(-1);
 		vo.setParentSeq(parentSeq);
-		List<TodoDetailVo> itemList = todoDetailService.select(vo);
+		List<StudyMemorizeDetailVo> itemList = studyMemorizeDetailService.select(vo);
 		
 		if(itemList != null && itemList.size() > 0) {
-			for(TodoDetailVo item : itemList) {
-				todoDetailItem = new TodoDetailItem(item);
-				panel11.add(todoDetailItem);
+			for(StudyMemorizeDetailVo item : itemList) {
+				studyMemorizeDetailItem = new StudyMemorizeDetailItem(item);
+				panel11.add(studyMemorizeDetailItem);
 			}
 		}else {
-			todoDetailItem = new TodoDetailItem(vo);
-			panel11.add(todoDetailItem);
+			studyMemorizeDetailItem = new StudyMemorizeDetailItem(vo);
+			panel11.add(studyMemorizeDetailItem);
 		}
 		
 		panel11.revalidate();
 		panel11.repaint();
 	}
 	
-	private class TodoDetailItem extends JPanel{
+	private class StudyMemorizeDetailItem extends JPanel{
 		private JPanel panel1;
 		private JPanel panel2;
 		private JPanel panel3;
@@ -149,12 +164,12 @@ public class TodoDetailFrame extends JFrame{
 		private JButton button1;
 		private JButton button2;
 		
-		private TodoDetailVo todoDetailVo;
+		private StudyMemorizeDetailVo studyMemorizeDetailVo;
 		private List<FileVo> fileList;
 		
-		public TodoDetailItem(TodoDetailVo vo) {
+		public StudyMemorizeDetailItem(StudyMemorizeDetailVo vo) {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			this.todoDetailVo = vo;
+			this.studyMemorizeDetailVo = vo;
 			
 			panel1 = new JPanel();
 			panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -186,7 +201,7 @@ public class TodoDetailFrame extends JFrame{
 						datePicker.setEnabled(false);
 						textArea.setEnabled(false);
 						button1.setEnabled(false);
-						todoDetailVo.setUseYn("N");
+						studyMemorizeDetailVo.setUseYn("N");
 					}
 				}
 			});
@@ -215,14 +230,14 @@ public class TodoDetailFrame extends JFrame{
 								file.setFileExtns("");
 							
 							int seq = fileService.insert(file);
-							String fileSeqs = todoDetailVo.getFileSeqs();
+							String fileSeqs = studyMemorizeDetailVo.getFileSeqs();
 							if(fileSeqs != null) {
 								fileSeqs += ("," + seq);
 							}else {
 								fileSeqs = String.valueOf(seq);
 							}
-							todoDetailVo.setFileSeqs(fileSeqs);
-							todoDetailService.update(todoDetailVo);
+							studyMemorizeDetailVo.setFileSeqs(fileSeqs);
+							studyMemorizeDetailService.update(studyMemorizeDetailVo);
 							
 							fileList.add(file);
 
@@ -230,7 +245,7 @@ public class TodoDetailFrame extends JFrame{
 							label.addMouseListener(new MouseListener() {
 				
 								public void mouseClicked(MouseEvent e) {
-									TodoDetailImageFrame frame = new TodoDetailImageFrame(file.getFileName(), System.getProperty("user.dir") + "\\" + file.getFilePath());
+									StudyMemorizeDetailImageFrame frame = new StudyMemorizeDetailImageFrame(file.getFileName(), System.getProperty("user.dir") + "\\" + file.getFilePath());
 									frame.setVisible(true);
 								}
 				
@@ -274,7 +289,7 @@ public class TodoDetailFrame extends JFrame{
 			textArea = new JTextArea((vo.getSeq() == -1)? "" : vo.getContents());
 			textArea.setLineWrap(true);
 			scrollPane = new JScrollPane(textArea);
-			scrollPane.setPreferredSize(new Dimension(560, 100));
+			scrollPane.setPreferredSize(new Dimension(560, 300));
 			panel2.add(scrollPane);
 			
 			this.add(panel2);
@@ -294,11 +309,9 @@ public class TodoDetailFrame extends JFrame{
 				
 				for(final FileVo fileVo : fileList) {
 					JLabel label = new JLabel(fileVo.getFileName());
-					final TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
 					label.addMouseListener(new MouseListener() {
 		
 						public void mouseClicked(MouseEvent e) {
-							frame.setVisible(true);
 						}
 		
 						public void mousePressed(MouseEvent e) {
@@ -330,21 +343,21 @@ public class TodoDetailFrame extends JFrame{
 		}
 		
 		public void save() {
-			todoDetailVo.setParentSeq(parentSeq);
-			todoDetailVo.setDate(String.format("%04d-%02d-%02d", model.getYear(), (model.getMonth() + 1), model.getDay()));
-			todoDetailVo.setContents(textArea.getText());
+			studyMemorizeDetailVo.setParentSeq(parentSeq);
+			studyMemorizeDetailVo.setDate(String.format("%04d-%02d-%02d", model.getYear(), (model.getMonth() + 1), model.getDay()));
+			studyMemorizeDetailVo.setContents(textArea.getText());
 			
 			List<String> fileSeqs = new ArrayList<String>();
 			for(FileVo vo : fileList) {
 				fileSeqs.add(String.valueOf(vo.getSeq()));
 			}
-			todoDetailVo.setFileSeqs(String.join(",", fileSeqs));
+			studyMemorizeDetailVo.setFileSeqs(String.join(",", fileSeqs));
 			
 			if(textArea.getText() != null && !textArea.getText().trim().equals("")) {
-				if(todoDetailVo.getSeq() == -1) {
-					todoDetailService.insert(todoDetailVo);
+				if(studyMemorizeDetailVo.getSeq() == -1) {
+					studyMemorizeDetailService.insert(studyMemorizeDetailVo);
 				}else {
-					todoDetailService.update(todoDetailVo);
+					studyMemorizeDetailService.update(studyMemorizeDetailVo);
 				}
 			}
 		}
