@@ -297,7 +297,7 @@ public class StudyMeterFrame extends JFrame{
 						
 						String timeValue = String.format("%02d:%02d:%02d", hour, min, second);
 						label3.setText(timeValue);
-						System.out.println(timeValue);
+						//System.out.println(timeValue);
 					
 					}catch(Exception exc) {
 						exc.printStackTrace();
