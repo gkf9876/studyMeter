@@ -129,6 +129,7 @@ public class TodoFrame extends JFrame{
 		private JButton button2;
 		private JButton button3;
 		private JButton button4;
+		private JButton button5;
 		
 		private TodoVo todoVo;
 		
@@ -336,6 +337,16 @@ public class TodoFrame extends JFrame{
 			});
 			panel.add(button4);
 			
+			button5 = new JButton("삭제");
+			todoDetailFrame = new TodoDetailFrame(todoVo.getSeq(), textField.getText(), todoDetailService, fileService);
+			button5.setBorder(BorderFactory.createLineBorder(Color.black));
+			button5.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					remove();
+				}
+			});
+			panel.add(button5);
+			
 			this.add(panel);
 			
 			//자식 항목 출력하기.
@@ -391,6 +402,21 @@ public class TodoFrame extends JFrame{
 			TodoItem item = new TodoItem(vo);
 			sonItemList.add(item);
 			this.add(item);
+		}
+		
+		public void remove() {
+			checkBox.setEnabled(false);
+			textField.setEnabled(false);
+			button1.setEnabled(false);
+			button2.setEnabled(false);
+			button3.setEnabled(false);
+			button4.setEnabled(false);
+			button5.setEnabled(false);
+			this.todoVo.setUseYn("N");
+			
+			for(TodoItem item : sonItemList) {
+				item.remove();
+			}
 		}
 		
 		public void setCheck(boolean checkYn) {
