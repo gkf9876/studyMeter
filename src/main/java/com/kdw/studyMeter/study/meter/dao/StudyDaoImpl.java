@@ -21,8 +21,8 @@ public class StudyDaoImpl implements StudyDao{
 		return sqlSessionTemplate.selectOne("study.selectOne", vo);
 	}
 	
-	public List<StudyVo> selectChart(int cnt) {
-		return sqlSessionTemplate.selectList("study.selectChart", cnt);
+	public List<StudyVo> selectChart(StudyVo vo) {
+		return sqlSessionTemplate.selectList("study.selectChart", vo);
 	}
 	
 	public int insert(final StudyVo vo) {

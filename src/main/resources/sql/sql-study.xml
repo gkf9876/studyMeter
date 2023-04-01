@@ -49,6 +49,15 @@
 					, STRFTIME('%Y.%m.%d', START_DATE) DATE
 				FROM
 					TB_STUDY ts
+				WHERE
+					1=1
+					<if test="studyType != null and studyType != ''">
+						AND STUDY_SEQ IN (SELECT SEQ FROM TB_STUDY_LIST WHERE STUDY_TYPE = #{studyType} AND USE_YN = 'Y')
+					</if>
+					
+					<if test="studySeq > 0">
+						AND STUDY_SEQ = #{studySeq}
+					</if>
 			) A
 			GROUP BY
 				DATE

@@ -29,4 +29,8 @@ public class StudyListDaoImpl implements StudyListDao{
 	public int update(StudyListVo vo) {
 		return sqlSessionTemplate.update("studyList.update", vo);
 	}
+	
+	public List<StudyListVo> selectTypeList(StudyListVo vo) {
+		return sqlSessionTemplate.selectList("studyList.selectTypeList");
+	}
 }

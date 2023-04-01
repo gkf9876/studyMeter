@@ -27,8 +27,8 @@ public class StudyService {
 		return dao.selectOne(vo);
 	}
 	
-	public List<StudyVo> selectChart(int cnt) {
-		return dao.selectChart(cnt);
+	public List<StudyVo> selectChart(StudyVo vo) {
+		return dao.selectChart(vo);
 	}
 
 	public int insert(StudyVo vo) {

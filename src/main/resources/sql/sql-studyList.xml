@@ -54,4 +54,16 @@
 		WHERE 
 			SEQ = #{seq}
 	</update>
+	
+	<select id="selectTypeList" parameterType="com.kdw.studyMeter.study.meter.vo.StudyListVo" resultType="com.kdw.studyMeter.study.meter.vo.StudyListVo">
+		/* studyList.selectTypeList */
+		SELECT
+			STUDY_TYPE
+		FROM 
+			TB_STUDY_LIST
+		WHERE
+			USE_YN = 'Y'
+		GROUP BY
+			STUDY_TYPE
+    </select>
 </mapper>

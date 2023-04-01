@@ -14,12 +14,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.kdw.studyMeter.study.meter.service.StudyService;
+import com.kdw.studyMeter.study.meter.vo.StudyListVo;
 import com.kdw.studyMeter.study.meter.vo.StudyVo;
 
 public class StudyChartFrame extends JFrame{
 	
 	private JPanel panel1;
+	private JPanel panel2;
+	
 	private StudyService studyService;
+	
+	private StudyVo studyVo = new StudyVo();
+	private StudyListVo studyListVo = null;
 	
 	public StudyChartFrame(final StudyService studyService) {
 		this.setTitle("공부량 통계");
@@ -30,12 +36,22 @@ public class StudyChartFrame extends JFrame{
 		
 		this.studyService = studyService;
 		
-		panel1 = new ChartPanel();
-		this.add(panel1);
+		panel1 = new JPanel();
+		this.add(panel1, BorderLayout.NORTH);
+		
+		panel2 = new ChartPanel();
+		this.add(panel2, BorderLayout.CENTER);
+	}
+	
+	public void init(StudyListVo studyListVo) {
+		this.studyListVo = studyListVo;
+		this.setTitle(studyListVo.getStudyNm() + " 공부량 통계");
 	}
 	
 	private class ChartPanel extends JPanel{
-		public void paint(Graphics g) {
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			
 			int x = 40;			//차트 x축 위치
 			int y = 30;			//차트 y축 위치
 			int width = 400;	//너비
@@ -50,7 +66,13 @@ public class StudyChartFrame extends JFrame{
 			List<String> xStr = new ArrayList<String>();		//x축 범례
 			List<Integer> yStr = new ArrayList<Integer>();		//y축 범례
 			
-			List<StudyVo> chartData = studyService.selectChart(xCnt);
+			studyVo.setRownumber(xCnt);
+			if(studyListVo != null)
+				studyVo.setStudySeq(studyListVo.getSeq());
+			else
+				studyVo.setStudySeq(-1);
+			
+			List<StudyVo> chartData = studyService.selectChart(studyVo);
 			Map<String, Integer> val = new HashMap<String, Integer>();
 			for(int i=0; i<chartData.size(); i++) {
 				StudyVo vo = chartData.get(i);

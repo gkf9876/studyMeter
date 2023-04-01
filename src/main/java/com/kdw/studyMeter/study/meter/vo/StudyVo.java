@@ -11,6 +11,7 @@ public class StudyVo {
 	
 	private String date;
 	private int studyMin;
+	private int rownumber;
 	public int getSeq() {
 		return seq;
 	}
@@ -64,5 +65,11 @@ public class StudyVo {
 	}
 	public void setStudyMin(int studyMin) {
 		this.studyMin = studyMin;
+	}
+	public int getRownumber() {
+		return rownumber;
+	}
+	public void setRownumber(int rownumber) {
+		this.rownumber = rownumber;
 	}
 }

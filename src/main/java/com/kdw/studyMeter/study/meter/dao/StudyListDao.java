@@ -9,4 +9,5 @@ public interface StudyListDao {
 	public StudyListVo selectOne(StudyListVo vo);
 	public int insert(StudyListVo vo);
 	public int update(StudyListVo vo);
+	public List<StudyListVo> selectTypeList(StudyListVo vo);
 }

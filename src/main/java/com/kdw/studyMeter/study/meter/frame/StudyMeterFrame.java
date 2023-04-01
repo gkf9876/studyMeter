@@ -47,7 +47,7 @@ import com.kdw.studyMeter.todo.service.TodoService;
 
 public class StudyMeterFrame extends JFrame{
 	
-	private JFrame frame1;
+	private StudyChartFrame studyChartFrame;
 	private TodoFrame todoFrame;
 	private CalendarFrame calendarFrame;
 	private StudyListFrame studyListFrame;
@@ -107,10 +107,11 @@ public class StudyMeterFrame extends JFrame{
 		menuBar.add(menu1);
 		
 		menuItem1 = new JMenuItem("통계");
-		frame1 = new StudyChartFrame(studyService);
+		studyChartFrame = new StudyChartFrame(studyService);
 		menuItem1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame1.setVisible(true);
+				studyChartFrame.init(comboBoxModel.getItem(comboBox1.getSelectedIndex()));
+				studyChartFrame.setVisible(true);
 			}
 		});
 		menu1.add(menuItem1);
@@ -190,7 +191,7 @@ public class StudyMeterFrame extends JFrame{
 				public void actionPerformed(ActionEvent e) {
 					if(comboBox1.getSelectedItem().toString() != null && !comboBox1.getSelectedItem().toString().trim().equals("")) {
 						StudyVo vo = new StudyVo();
-						vo.setStudySeq(comboBoxModel.getSeq(comboBox1.getSelectedItem().toString()));
+						vo.setStudySeq(comboBoxModel.getItem(comboBox1.getSelectedIndex()).getSeq());
 						vo.setMemo(textField1.getText());
 						seq = studyService.insert(vo);
 						button1.setEnabled(false);
@@ -344,8 +345,8 @@ public class StudyMeterFrame extends JFrame{
 			return dataArr[index];
 		}
 		
-		public int getSeq(String studyNm) {
-			return data.get(studyNm);
+		public StudyListVo getItem(int index) {
+			return studyList.get(index);
 		}
 	}
 }

@@ -35,4 +35,8 @@ public class StudyListService {
 	public int update(StudyListVo vo) {
 		return dao.update(vo);
 	}
+	
+	public List<StudyListVo> selectTypeList(StudyListVo vo){
+		return dao.selectTypeList(vo);
+	}
 }

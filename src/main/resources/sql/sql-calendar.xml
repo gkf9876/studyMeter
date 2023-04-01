@@ -8,17 +8,18 @@
 		FROM (
 			SELECT
 				DATE
-				, '독서시간 : ' || SUM(STUDY_MIN) || '분' AS CONTENTS
+				, STUDY_NM || ' 시간 : ' || SUM(STUDY_MIN) || '분' AS CONTENTS
 				, '1' AS ODR
 			FROM (
 				SELECT
 					(STRFTIME('%s', END_DATE) - STRFTIME('%s', START_DATE)) / 60 AS STUDY_MIN
 					, STRFTIME('%Y-%m-%d', START_DATE) DATE
+					, (SELECT '[' || STUDY_TYPE || '] ' || STUDY_NM FROM TB_STUDY_LIST WHERE SEQ = ts.STUDY_SEQ) STUDY_NM
 				FROM
 					TB_STUDY ts
 			) A
 			GROUP BY
-				DATE
+				DATE, STUDY_NM
 			UNION ALL
 			SELECT
 				DATE
