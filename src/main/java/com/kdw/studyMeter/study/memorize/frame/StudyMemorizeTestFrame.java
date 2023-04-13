@@ -114,7 +114,7 @@ public class StudyMemorizeTestFrame extends JFrame{
 		
 		this.add(panel3, BorderLayout.SOUTH);
 		
-		init();
+		//init();
 	}
 	
 	public void init() {

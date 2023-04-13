@@ -2,12 +2,15 @@ package com.kdw.studyMeter.todo.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -69,7 +72,7 @@ public class TodoDetailFrame extends JFrame{
 		panel11.setLayout(new BoxLayout(panel11, BoxLayout.Y_AXIS));
 		
 		//할일 목록 초기화
-		init();
+		//init();
 		
 		//스크롤 생성
 		scrollPane1 = new JScrollPane(panel11);
@@ -201,20 +204,20 @@ public class TodoDetailFrame extends JFrame{
 						
 					}else {
 						try {
-							final FileVo file = new FileVo();
-							file.setFilePath(fileChooser.getSelectedFile().getPath());
-							file.setFileName(fileChooser.getSelectedFile().getName());
+							final FileVo fileVo = new FileVo();
+							fileVo.setFilePath(fileChooser.getSelectedFile().getPath());
+							fileVo.setFileName(fileChooser.getSelectedFile().getName());
 							
 							String path = fileChooser.getSelectedFile().getPath();
 							
 							//KB 단위로 저장
-							file.setFileSize((int)Files.size(Paths.get(path)) / 1024);
+							fileVo.setFileSize((int)Files.size(Paths.get(path)) / 1024);
 							if(path.lastIndexOf(".") > -1)
-								file.setFileExtns(path.substring(path.lastIndexOf(".") + 1));
+								fileVo.setFileExtns(path.substring(path.lastIndexOf(".") + 1));
 							else
-								file.setFileExtns("");
+								fileVo.setFileExtns("");
 							
-							int seq = fileService.insert(file);
+							int seq = fileService.insert(fileVo);
 							String fileSeqs = todoDetailVo.getFileSeqs();
 							if(fileSeqs != null) {
 								fileSeqs += ("," + seq);
@@ -224,14 +227,26 @@ public class TodoDetailFrame extends JFrame{
 							todoDetailVo.setFileSeqs(fileSeqs);
 							todoDetailService.update(todoDetailVo);
 							
-							fileList.add(file);
+							fileList.add(fileVo);
 
-							JLabel label = new JLabel(file.getFileName());
+							JLabel label = new JLabel(fileVo.getFileName());
 							label.addMouseListener(new MouseListener() {
 				
 								public void mouseClicked(MouseEvent e) {
-									TodoDetailImageFrame frame = new TodoDetailImageFrame(file.getFileName(), System.getProperty("user.dir") + "\\" + file.getFilePath());
-									frame.setVisible(true);
+									if(fileVo.getFileExtns() != null && fileVo.getFileExtns().equals("jpg")) {
+										TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+										frame.setVisible(true);
+									}else {
+										File file = new File(fileVo.getFilePath());
+										if(file.exists()) {
+										    try {
+												Desktop.getDesktop().open(file);
+											} catch (IOException e1) {
+												// TODO Auto-generated catch block
+												e1.printStackTrace();
+											}
+										}
+									}
 								}
 				
 								public void mousePressed(MouseEvent e) {

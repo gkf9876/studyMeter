@@ -2,12 +2,15 @@ package com.kdw.studyMeter.study.memorize.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -73,7 +76,7 @@ public class StudyMemorizeDetailFrame extends JFrame{
 		panel11.setLayout(new BoxLayout(panel11, BoxLayout.Y_AXIS));
 		
 		//할일 목록 초기화
-		init();
+		//init();
 		
 		//스크롤 생성
 		scrollPane1 = new JScrollPane(panel11);
@@ -312,6 +315,20 @@ public class StudyMemorizeDetailFrame extends JFrame{
 					label.addMouseListener(new MouseListener() {
 		
 						public void mouseClicked(MouseEvent e) {
+							if(fileVo.getFileExtns() != null && fileVo.getFileExtns().equals("jpg")) {
+								TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+								frame.setVisible(true);
+							}else {
+								File file = new File(fileVo.getFilePath());
+								if(file.exists()) {
+								    try {
+										Desktop.getDesktop().open(file);
+									} catch (IOException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+								}
+							}
 						}
 		
 						public void mousePressed(MouseEvent e) {

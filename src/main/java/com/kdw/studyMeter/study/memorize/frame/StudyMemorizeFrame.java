@@ -59,7 +59,7 @@ public class StudyMemorizeFrame extends JFrame{
 		panel11.setLayout(new BoxLayout(panel11, BoxLayout.Y_AXIS));
 		
 		//할일 목록 초기화
-		init();
+		//init();
 		
 		//스크롤 생성
 		scrollPane1 = new JScrollPane(panel11);
