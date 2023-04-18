@@ -243,6 +243,8 @@ public class StudyMemorizeDetailFrame extends JFrame{
 							studyMemorizeDetailVo.setFileSeqs(fileSeqs);
 							studyMemorizeDetailService.update(studyMemorizeDetailVo);
 							
+							if(fileList == null)
+								fileList = new ArrayList<FileVo>();
 							fileList.add(file);
 
 							JLabel label = new JLabel(file.getFileName());
@@ -360,8 +362,10 @@ public class StudyMemorizeDetailFrame extends JFrame{
 			studyMemorizeDetailVo.setContents(textArea.getText());
 			
 			List<String> fileSeqs = new ArrayList<String>();
-			for(FileVo vo : fileList) {
-				fileSeqs.add(String.valueOf(vo.getSeq()));
+				if(fileList != null) {
+				for(FileVo vo : fileList) {
+					fileSeqs.add(String.valueOf(vo.getSeq()));
+				}
 			}
 			studyMemorizeDetailVo.setFileSeqs(String.join(",", fileSeqs));
 			

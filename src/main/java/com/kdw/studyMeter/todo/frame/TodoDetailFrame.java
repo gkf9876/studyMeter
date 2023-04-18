@@ -228,6 +228,8 @@ public class TodoDetailFrame extends JFrame{
 							todoDetailVo.setFileSeqs(fileSeqs);
 							todoDetailService.update(todoDetailVo);
 							
+							if(fileList == null)
+								fileList = new ArrayList<FileVo>();
 							fileList.add(fileVo);
 
 							JLabel label = new JLabel(fileVo.getFileName());
@@ -357,8 +359,10 @@ public class TodoDetailFrame extends JFrame{
 			todoDetailVo.setContents(textArea.getText());
 			
 			List<String> fileSeqs = new ArrayList<String>();
-			for(FileVo vo : fileList) {
-				fileSeqs.add(String.valueOf(vo.getSeq()));
+			if(fileList != null) {
+				for(FileVo vo : fileList) {
+					fileSeqs.add(String.valueOf(vo.getSeq()));
+				}
 			}
 			todoDetailVo.setFileSeqs(String.join(",", fileSeqs));
 			
