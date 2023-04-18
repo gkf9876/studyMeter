@@ -8,10 +8,40 @@
 			, DATE
 			, CONTENTS
 			, FILE_SEQS
+			-- 파일 목록을 JSON 형식으로 출력
+			, (
+				SELECT 
+					JSON_GROUP_ARRAY(JSON_OBJECT('seq', SEQ, 'filePath', FILE_PATH, "fileName", FILE_NAME, "fileSize", FILE_SIZE, "fileExtns", FILE_EXTNS, "useYn", USE_YN, "createDate", CREATE_DATE))
+				FROM 
+					TB_FILE 
+				WHERE 
+					USE_YN = 'Y' 
+					AND SEQ IN (
+						WITH SPLIT(WORD, CSV) AS (
+							SELECT
+								'',
+								A.FILE_SEQS || ','
+							UNION ALL
+							SELECT
+								SUBSTR(CSV, 0, INSTR(CSV, ',')),
+								SUBSTR(CSV, INSTR(CSV, ',') + 1)
+							FROM
+								SPLIT
+							WHERE
+								CSV != ''
+						)
+						SELECT
+							WORD
+						FROM
+							SPLIT
+						WHERE
+							WORD != ''
+					)
+			) FILE_INFOS
 			, USE_YN
 			, CREATE_DATE
 		FROM
-			TB_TODO_DETAIL
+			TB_TODO_DETAIL A
 		WHERE
 			1=1
 			AND USE_YN = 'Y'

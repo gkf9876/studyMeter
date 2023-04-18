@@ -2,6 +2,7 @@ package com.kdw.studyMeter.todo.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -230,6 +231,7 @@ public class TodoDetailFrame extends JFrame{
 							fileList.add(fileVo);
 
 							JLabel label = new JLabel(fileVo.getFileName());
+							label.setCursor(new Cursor(Cursor.HAND_CURSOR));
 							label.addMouseListener(new MouseListener() {
 				
 								public void mouseClicked(MouseEvent e) {
@@ -297,23 +299,28 @@ public class TodoDetailFrame extends JFrame{
 			panel3 = new JPanel();
 			
 			//첨부된 파일 목록 출력
-			fileList = new ArrayList<FileVo>();
+			fileList = vo.getFileInfos();
 			if(vo.getFileSeqs() != null && !"".equals(vo.getFileSeqs().trim())) {
-				String[] fileArr = vo.getFileSeqs().split(",");
-				for(String seq : fileArr) {
-					FileVo fileVo = new FileVo();
-					fileVo.setSeq(Integer.parseInt(seq));
-					fileVo = fileService.selectOne(fileVo);
-					fileList.add(fileVo);
-				}
-				
 				for(final FileVo fileVo : fileList) {
 					JLabel label = new JLabel(fileVo.getFileName());
-					final TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+					label.setCursor(new Cursor(Cursor.HAND_CURSOR));
 					label.addMouseListener(new MouseListener() {
 		
 						public void mouseClicked(MouseEvent e) {
-							frame.setVisible(true);
+							if(fileVo.getFileExtns() != null && fileVo.getFileExtns().equals("jpg")) {
+								TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+								frame.setVisible(true);
+							}else {
+								File file = new File(fileVo.getFilePath());
+								if(file.exists()) {
+								    try {
+										Desktop.getDesktop().open(file);
+									} catch (IOException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+								}
+							}
 						}
 		
 						public void mousePressed(MouseEvent e) {
