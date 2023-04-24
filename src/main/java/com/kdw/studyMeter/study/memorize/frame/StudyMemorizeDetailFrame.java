@@ -114,8 +114,10 @@ public class StudyMemorizeDetailFrame extends JFrame{
 				JPanel panel = new StudyMemorizeDetailItem(vo);
 				panel11.add(panel);
 				
-				panel1.revalidate();
-				panel1.repaint();
+				revalidate();
+				repaint();
+				
+				scrollPane1.getVerticalScrollBar().setValue(scrollPane1.getVerticalScrollBar().getMaximum());
 			}
 		});
 		panel2.add(button2);

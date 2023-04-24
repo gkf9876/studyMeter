@@ -99,8 +99,10 @@ public class StudyMemorizeFrame extends JFrame{
 				studyMemorizeItem.add(vo);
 				//panel11.add(item);
 				
-				panel11.revalidate();
-				panel11.repaint();
+				revalidate();
+				repaint();
+				
+				scrollPane1.getVerticalScrollBar().setValue(scrollPane1.getVerticalScrollBar().getMaximum());
 			}
 		});
 		panel2.add(button2);
