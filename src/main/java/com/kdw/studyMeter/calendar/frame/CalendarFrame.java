@@ -95,7 +95,7 @@ public class CalendarFrame extends JFrame{
 		panel2 = new JPanel();
 		panel2.setLayout(new BorderLayout());
 		
-		init();
+		//init();
 		
 		this.add(panel2, BorderLayout.CENTER);
 	}

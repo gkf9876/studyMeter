@@ -131,6 +131,7 @@ public class StudyMeterFrame extends JFrame{
 		menuItem3 = new JMenuItem("캘린더");
 		menuItem3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				calendarFrame.init();
 				calendarFrame.setVisible(true);
 			}
 		});
