@@ -271,7 +271,7 @@ public class StudyMeterFrame extends JFrame{
 							studyService.update(vo);
 							vo = studyService.selectOne(vo);
 							
-							SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							Date startDate = dtFormat.parse(vo.getStartDate());
 							Date endDate = dtFormat.parse(vo.getEndDate());
 							long diffSecond = (endDate.getTime() - startDate.getTime()) / 1000;
@@ -287,7 +287,7 @@ public class StudyMeterFrame extends JFrame{
 								studyService.update(vo);
 								vo = studyService.selectOne(vo);
 								
-								SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+								SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 								Date startDate = dtFormat.parse(vo.getStartDate());
 								Date endDate = dtFormat.parse(vo.getEndDate());
 								long diffSecond = (endDate.getTime() - startDate.getTime()) / 1000;
