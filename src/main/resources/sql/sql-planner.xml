@@ -1,0 +1,100 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planner">
+	<select id="selectList" resultType="com.kdw.studyMeter.planner.vo.PlannerVo">
+		/* planner.selectList */
+		SELECT 
+			SEQ
+			, PARENT_SEQ
+			, TYPE
+			, NAME
+			, CONTENTS
+			, CREATE_DATE
+			, UPDATE_DATE
+			, USE_YN
+			, FILE_SEQ
+		FROM 
+			TB_PLANNER A
+		WHERE
+			USE_YN = 'Y'
+			AND PARENT_SEQ = -1
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.planner.vo.PlannerVo" resultType="com.kdw.studyMeter.planner.vo.PlannerVo">
+		/* planner.selectOne */
+		SELECT 
+			SEQ
+			, PARENT_SEQ
+			, TYPE
+			, NAME
+			, CONTENTS
+			, CREATE_DATE
+			, UPDATE_DATE
+			, USE_YN
+			, FILE_SEQ
+			, SORT_ORDER
+		FROM (
+			SELECT 
+				SEQ
+				, PARENT_SEQ
+				, TYPE
+				, NAME
+				, CONTENTS
+				, CREATE_DATE
+				, UPDATE_DATE
+				, USE_YN
+				, FILE_SEQ
+				, '1' SORT_ORDER
+			FROM 
+				TB_PLANNER A
+			WHERE 
+				SEQ = #{seq}
+			UNION ALL
+			SELECT 
+				SEQ
+				, PARENT_SEQ
+				, TYPE
+				, NAME
+				, CONTENTS
+				, CREATE_DATE
+				, UPDATE_DATE
+				, USE_YN
+				, FILE_SEQ
+				, '0' SORT_ORDER
+			FROM 
+				TB_PLANNER A
+			WHERE 
+				PARENT_SEQ = #{seq}
+		) A
+		ORDER BY
+			SORT_ORDER DESC, SEQ ASC
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.planner.vo.PlannerVo">
+		/* planner.insert */
+		INSERT INTO
+			TB_PLANNER(
+				PARENT_SEQ
+				, TYPE
+				, NAME
+				, CONTENTS
+				, UPDATE_DATE
+			)VALUES( 
+				#{parentSeq} ,
+				#{type} ,
+				#{name} ,
+				#{contents} ,
+				DATETIME('now', 'localtime')
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.planner.vo.PlannerVo">
+		/* planner.update */
+		UPDATE 
+			TB_PLANNER 
+		SET 
+			NAME = #{name}
+			, CONTENTS = #{contents}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

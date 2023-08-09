@@ -33,6 +33,8 @@ import javax.swing.Timer;
 import com.kdw.studyMeter.calendar.frame.CalendarFrame;
 import com.kdw.studyMeter.calendar.service.CalendarService;
 import com.kdw.studyMeter.file.service.FileService;
+import com.kdw.studyMeter.planner.frame.PlannerListFrame;
+import com.kdw.studyMeter.planner.service.PlannerService;
 import com.kdw.studyMeter.study.chart.frame.StudyChartFrame;
 import com.kdw.studyMeter.study.memorize.frame.StudyMemorizeFrame;
 import com.kdw.studyMeter.study.memorize.service.StudyMemorizeDetailService;
@@ -52,6 +54,7 @@ public class StudyMeterFrame extends JFrame{
 	private CalendarFrame calendarFrame;
 	private StudyListFrame studyListFrame;
 	private StudyMemorizeFrame studyMemorizeFrame;
+	private PlannerListFrame plannerListFrame;
 	
 	private JMenuBar menuBar;
 	private JMenu menu1;
@@ -60,6 +63,7 @@ public class StudyMeterFrame extends JFrame{
 	private JMenuItem menuItem3;
 	private JMenuItem menuItem4;
 	private JMenuItem menuItem5;
+	private JMenuItem menuItem6;
 	
 	private JPanel panel1;
 	private JPanel panel10;
@@ -93,7 +97,8 @@ public class StudyMeterFrame extends JFrame{
 	
 	public StudyMeterFrame(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
 			, final CalendarService calendarService, final FileService fileService, final StudyListService studyListService
-			, final StudyMemorizeService studyMemorizeService, final StudyMemorizeDetailService studyMemorizeDetailService) {
+			, final StudyMemorizeService studyMemorizeService, final StudyMemorizeDetailService studyMemorizeDetailService
+			, final PlannerService plannerService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -156,6 +161,16 @@ public class StudyMeterFrame extends JFrame{
 			}
 		});
 		menu1.add(menuItem5);
+		
+		plannerListFrame = new PlannerListFrame(plannerService, fileService);
+		menuItem6 = new JMenuItem("계획표 목록");
+		menuItem6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plannerListFrame.init();
+				plannerListFrame.setVisible(true);
+			}
+		});
+		menu1.add(menuItem6);
 		
 		this.setJMenuBar(menuBar);
 		

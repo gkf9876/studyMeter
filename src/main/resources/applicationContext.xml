@@ -32,6 +32,9 @@
 	<bean id="studyMemorizeDetailDao" class="com.kdw.studyMeter.study.memorize.dao.StudyMemorizeDetailDaoImpl">
 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
+	<bean id="plannerDao" class="com.kdw.studyMeter.planner.dao.PlannerDaoImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+	</bean>
 	
     <!-- sqlSessionTemplate -->
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
