@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -74,7 +75,7 @@ public class StudyMemorizeDetailFrame extends JFrame{
 		
 		panel1 = new JPanel();
 		panel11 = new JPanel();
-		panel11.setLayout(new BoxLayout(panel11, BoxLayout.Y_AXIS));
+		panel11.setLayout(new GridLayout(0, 1));
 		
 		//할일 목록 초기화
 		//init();
@@ -304,6 +305,7 @@ public class StudyMemorizeDetailFrame extends JFrame{
 			this.add(panel2);
 			
 			panel3 = new JPanel();
+			panel3.setLayout(new GridLayout(0, 1));
 			
 			//첨부된 파일 목록 출력
 			fileList = vo.getFileInfos();
