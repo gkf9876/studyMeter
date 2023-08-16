@@ -1,6 +1,7 @@
 package com.kdw.studyMeter.planner.frame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -189,7 +190,8 @@ public class PlannerDetailFrame extends JFrame{
 			}
 			
 			String name = (list.size() >= 2)? list.get(1).getName() : "";
-			buttons[0][0] = new JButton(name);
+			buttons[0][0] = new JButton(setHtml(name));
+			buttons[0][0].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[0][0].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[0][0] != null && (plannerVos[0][0].getSeq() != -1 || plannerVos[0][0].getParentSeq() != -1)) {
@@ -210,7 +212,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[0][0], 0, 0);
 
 			name = (list.size() >= 3)? list.get(2).getName() : "";
-			buttons[0][1] = new JButton(name);
+			buttons[0][1] = new JButton(setHtml(name));
+			buttons[0][1].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[0][1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[0][1] != null && (plannerVos[0][1].getSeq() != -1 || plannerVos[0][1].getParentSeq() != -1)) {
@@ -231,7 +234,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[0][1], 0, 1);
 
 			name = (list.size() >= 4)? list.get(3).getName() : "";
-			buttons[0][2] = new JButton(name);
+			buttons[0][2] = new JButton(setHtml(name));
+			buttons[0][2].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[0][2].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[0][2] != null && (plannerVos[0][2].getSeq() != -1 || plannerVos[0][2].getParentSeq() != -1)) {
@@ -252,7 +256,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[0][2], 0, 2);
 
 			name = (list.size() >= 9)? list.get(8).getName() : "";
-			buttons[1][0] = new JButton(name);
+			buttons[1][0] = new JButton(setHtml(name));
+			buttons[1][0].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[1][0].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[1][0] != null && (plannerVos[1][0].getSeq() != -1 || plannerVos[1][0].getParentSeq() != -1)) {
@@ -273,7 +278,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[1][0], 1, 0);
 
 			name = (list.size() >= 1)? list.get(0).getName() : "";
-			buttons[1][1] = new JButton(vo.getName());
+			buttons[1][1] = new JButton(setHtml(vo.getName()));
+			buttons[1][1].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.RED, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[1][1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[1][1] != null && (plannerVos[1][1].getSeq() != -1 || plannerVos[1][1].getParentSeq() != -1)) {
@@ -296,7 +302,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[1][1], 1, 1);
 
 			name = (list.size() >= 5)? list.get(4).getName() : "";
-			buttons[1][2] = new JButton(name);
+			buttons[1][2] = new JButton(setHtml(name));
+			buttons[1][2].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[1][2].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[1][2] != null && (plannerVos[1][2].getSeq() != -1 || plannerVos[1][2].getParentSeq() != -1)) {
@@ -317,7 +324,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[1][2], 1, 2);
 
 			name = (list.size() >= 8)? list.get(7).getName() : "";
-			buttons[2][0] = new JButton(name);
+			buttons[2][0] = new JButton(setHtml(name));
+			buttons[2][0].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[2][0].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[2][0] != null && (plannerVos[2][0].getSeq() != -1 || plannerVos[2][0].getParentSeq() != -1)) {
@@ -338,7 +346,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[2][0], 2, 0);
 
 			name = (list.size() >= 7)? list.get(6).getName() : "";
-			buttons[2][1] = new JButton(name);
+			buttons[2][1] = new JButton(setHtml(name));
+			buttons[2][1].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[2][1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[2][1] != null && (plannerVos[2][1].getSeq() != -1 || plannerVos[2][1].getParentSeq() != -1)) {
@@ -359,7 +368,8 @@ public class PlannerDetailFrame extends JFrame{
 			this.add(buttons[2][1], 2, 1);
 
 			name = (list.size() >= 6)? list.get(5).getName() : "";
-			buttons[2][2] = new JButton(name);
+			buttons[2][2] = new JButton(setHtml(name));
+			buttons[2][2].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 			buttons[2][2].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(plannerVos[2][2] != null && (plannerVos[2][2].getSeq() != -1 || plannerVos[2][2].getParentSeq() != -1)) {
@@ -493,5 +503,15 @@ public class PlannerDetailFrame extends JFrame{
 			items[2][2] = new MandalArtItem(itemVo, owner);
 			this.add(items[2][2], 2, 2);
 		}
+	}
+	
+	private String setHtml(String str) {
+		String result = "";
+		result += "<html>";
+		result += "<body style='text-align:center;'>";
+		result += (str != null)? str : "";
+		result += "</body>";
+		result += "</html>";
+		return result;
 	}
 }
