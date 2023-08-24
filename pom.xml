@@ -10,6 +10,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Spring -->
 		<spring-framework.version>5.0.8.RELEASE</spring-framework.version>
+	  	<javafx-version>20.0.2</javafx-version>
 	</properties>
 	<name>StudyMeter</name>
 	<dependencies>
@@ -68,6 +69,41 @@
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+	  	<dependency>
+	  		<groupId>org.openjfx</groupId>
+	  		<artifactId>javafx-base</artifactId>
+	  		<version>${javafx-version}</version>
+	  	</dependency>
+	  	<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-controls</artifactId>
+		    <version>${javafx-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-fxml</artifactId>
+		    <version>${javafx-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-graphics</artifactId>
+		    <version>${javafx-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-media</artifactId>
+		    <version>${javafx-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-swing</artifactId>
+		    <version>${javafx-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-web</artifactId>
+		    <version>${javafx-version}</version>
 		</dependency>
 	</dependencies>
 </project>

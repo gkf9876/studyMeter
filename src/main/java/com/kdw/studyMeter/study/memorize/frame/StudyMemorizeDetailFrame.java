@@ -317,7 +317,10 @@ public class StudyMemorizeDetailFrame extends JFrame{
 		
 						public void mouseClicked(MouseEvent e) {
 							if(fileVo.getFileExtns() != null && fileVo.getFileExtns().equals("jpg")) {
-								TodoDetailImageFrame frame = new TodoDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+								StudyMemorizeDetailImageFrame frame = new StudyMemorizeDetailImageFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
+								frame.setVisible(true);
+							}else if(fileVo.getFileExtns() != null && fileVo.getFileExtns().equals("mp4")) {
+								StudyMemorizeDetailVideoFrame frame = new StudyMemorizeDetailVideoFrame(fileVo.getFileName(), System.getProperty("user.dir") + "\\" + fileVo.getFilePath());
 								frame.setVisible(true);
 							}else {
 								File file = new File(fileVo.getFilePath());
