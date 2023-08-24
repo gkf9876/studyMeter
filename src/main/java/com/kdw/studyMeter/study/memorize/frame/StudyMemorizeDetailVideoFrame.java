@@ -48,7 +48,7 @@ public class StudyMemorizeDetailVideoFrame extends JFrame{
 			
 			MediaView mediaView = new MediaView();
 			
-			Media media = new Media(new File("C:\\Users\\LGRnD\\Desktop\\20230816073453_30.mp4").toURI().toString());
+			Media media = new Media(new File(path).toURI().toString());
 			
 			mediaPlayer = new MediaPlayer(media);
 			
