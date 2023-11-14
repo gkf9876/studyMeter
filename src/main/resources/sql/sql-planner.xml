@@ -94,6 +94,7 @@
 		SET 
 			NAME = #{name}
 			, CONTENTS = #{contents}
+			, USE_YN = #{useYn}
 		WHERE 
 			SEQ = #{seq}
 	</update>

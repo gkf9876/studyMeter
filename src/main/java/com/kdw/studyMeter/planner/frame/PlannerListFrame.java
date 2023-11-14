@@ -136,6 +136,7 @@ public class PlannerListFrame extends JFrame{
 		private JTextField textField1;
 		private JComboBox<String> comboBox1;
 		private JButton button1;
+		private JButton button2;
 		
 		private PlannerVo plannerVo;
 		
@@ -172,6 +173,21 @@ public class PlannerListFrame extends JFrame{
 				}
 			});
 			this.add(button1);
+			
+			button2 = new JButton("삭제");
+			button2.setBorder(BorderFactory.createLineBorder(Color.black));
+			button2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int result = JOptionPane.showConfirmDialog(null, "삭제하시겠습니까?", "확인", JOptionPane.OK_CANCEL_OPTION);
+					if(result == 0) {
+						textField1.setEnabled(false);
+						comboBox1.setEnabled(false);
+						button1.setEnabled(false);
+						plannerVo.setUseYn("N");
+					}
+				}
+			});
+			this.add(button2);
 		}
 		
 		public void save() {
