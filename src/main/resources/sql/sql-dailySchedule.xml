@@ -1,0 +1,74 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dailySchedule">
+	<select id="selectList" resultType="com.kdw.studyMeter.planner.vo.DailyScheduleVo">
+		/* dailySchedule.selectList */
+		SELECT 
+			SEQ
+			, NAME
+			, CONTENTS
+			, CREATE_DATE
+			, UPDATE_DATE
+			, USE_YN
+			, FILE_SEQ
+		FROM 
+			TB_DAILY_SCHEDULE A
+		WHERE
+			USE_YN = 'Y'
+    </select>
+    
+	<select id="selectOne" parameterType="com.kdw.studyMeter.planner.vo.DailyScheduleVo" resultType="com.kdw.studyMeter.planner.vo.DailyScheduleVo">
+		/* dailySchedule.selectOne */
+		SELECT 
+			SEQ
+			, NAME
+			, CONTENTS
+			, CREATE_DATE
+			, UPDATE_DATE
+			, USE_YN
+			, FILE_SEQ
+			, SORT_ORDER
+		FROM (
+			SELECT 
+				SEQ
+				, NAME
+				, CONTENTS
+				, CREATE_DATE
+				, UPDATE_DATE
+				, USE_YN
+				, FILE_SEQ
+				, '1' SORT_ORDER
+			FROM 
+				TB_DAILY_SCHEDULE A
+			WHERE 
+				SEQ = #{seq}
+		) A
+		ORDER BY
+			SORT_ORDER DESC, SEQ ASC
+    </select>
+    
+    <insert id="insert" parameterType="com.kdw.studyMeter.planner.vo.DailyScheduleVo">
+		/* dailySchedule.insert */
+		INSERT INTO
+			TB_DAILY_SCHEDULE(
+				NAME
+				, CONTENTS
+				, UPDATE_DATE
+			)VALUES( 
+				#{name} ,
+				#{contents} ,
+				DATETIME('now', 'localtime')
+			)
+	</insert>
+    
+    <update id="update" parameterType="com.kdw.studyMeter.planner.vo.DailyScheduleVo">
+		/* dailySchedule.update */
+		UPDATE 
+			TB_DAILY_SCHEDULE 
+		SET 
+			NAME = #{name}
+			, CONTENTS = #{contents}
+			, USE_YN = #{useYn}
+		WHERE 
+			SEQ = #{seq}
+	</update>
+</mapper>

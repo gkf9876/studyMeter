@@ -33,7 +33,10 @@ import javax.swing.Timer;
 import com.kdw.studyMeter.calendar.frame.CalendarFrame;
 import com.kdw.studyMeter.calendar.service.CalendarService;
 import com.kdw.studyMeter.file.service.FileService;
+import com.kdw.studyMeter.planner.frame.DailyScheduleListFrame;
 import com.kdw.studyMeter.planner.frame.PlannerListFrame;
+import com.kdw.studyMeter.planner.service.DailyScheduleDetailService;
+import com.kdw.studyMeter.planner.service.DailyScheduleService;
 import com.kdw.studyMeter.planner.service.PlannerService;
 import com.kdw.studyMeter.study.chart.frame.StudyChartFrame;
 import com.kdw.studyMeter.study.memorize.frame.StudyMemorizeFrame;
@@ -55,6 +58,7 @@ public class StudyMeterFrame extends JFrame{
 	private StudyListFrame studyListFrame;
 	private StudyMemorizeFrame studyMemorizeFrame;
 	private PlannerListFrame plannerListFrame;
+	private DailyScheduleListFrame dailyScheduleListFrame;
 	
 	private JMenuBar menuBar;
 	private JMenu menu1;
@@ -64,6 +68,7 @@ public class StudyMeterFrame extends JFrame{
 	private JMenuItem menuItem4;
 	private JMenuItem menuItem5;
 	private JMenuItem menuItem6;
+	private JMenuItem menuItem7;
 	
 	private JPanel panel1;
 	private JPanel panel10;
@@ -98,7 +103,7 @@ public class StudyMeterFrame extends JFrame{
 	public StudyMeterFrame(final StudyService studyService, final TodoService todoService, final TodoDetailService todoDetailService
 			, final CalendarService calendarService, final FileService fileService, final StudyListService studyListService
 			, final StudyMemorizeService studyMemorizeService, final StudyMemorizeDetailService studyMemorizeDetailService
-			, final PlannerService plannerService) {
+			, final PlannerService plannerService, final DailyScheduleService dailyScheduleService, final DailyScheduleDetailService dailyScheduleDetailService) {
 		this.setTitle("공부량 측정기");
 		this.setSize(500, 380);
 		this.setLayout(new BorderLayout());
@@ -172,12 +177,22 @@ public class StudyMeterFrame extends JFrame{
 		});
 		menu1.add(menuItem6);
 		
+		dailyScheduleListFrame = new DailyScheduleListFrame(dailyScheduleService, dailyScheduleDetailService, fileService);
+		menuItem7 = new JMenuItem("하루일과 계획 목록");
+		menuItem7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dailyScheduleListFrame.init();
+				dailyScheduleListFrame.setVisible(true);
+			}
+		});
+		menu1.add(menuItem7);
+		
 		this.setJMenuBar(menuBar);
 		
 		try {
 			panel1 = new JPanel();
 			panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-			panel1.setPreferredSize(new Dimension(450, 85));
+			panel1.setPreferredSize(new Dimension(450, 90));
 			
 			panel10 = new JPanel();
 			panel10.setBorder(BorderFactory.createLineBorder(Color.black));

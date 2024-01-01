@@ -35,6 +35,12 @@
 	<bean id="plannerDao" class="com.kdw.studyMeter.planner.dao.PlannerDaoImpl">
 		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
 	</bean>
+	<bean id="dailyScheduleDao" class="com.kdw.studyMeter.planner.dao.DailyScheduleDaoImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+	</bean>
+	<bean id="dailyScheduleDetailDao" class="com.kdw.studyMeter.planner.dao.DailyScheduleDetailDaoImpl">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+	</bean>
 	
     <!-- sqlSessionTemplate -->
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">

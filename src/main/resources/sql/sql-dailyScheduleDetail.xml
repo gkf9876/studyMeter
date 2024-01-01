@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dailyScheduleDetail">
+	<select id="selectList" resultType="com.kdw.studyMeter.planner.vo.DailyScheduleDetailVo">
+		/* dailyScheduleDetail.selectList */
+		SELECT 
+			SEQ
+			, PARENT_SEQ
+			, WEEK
+			, START_TIME
+			, END_TIME
+			, CONTENTS
+			, USE_YN
+			, CREATE_DATE
+			, UPDATE_DATE
+		FROM 
+			TB_DAILY_SCHEDULE_DETAIL A
+		WHERE
+			USE_YN = 'Y'
+			AND PARENT_SEQ = #{parentSeq}
+			AND WEEK = #{week}
+		ORDER BY
+			START_TIME ASC
+    </select>
+</mapper>

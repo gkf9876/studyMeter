@@ -61,7 +61,7 @@ public class StudyChartFrame extends JFrame{
 			int xXis = -25;		//범례 위치조정값
 			int yXis = -5;		//범례 위치조정값
 			int varWidth = 15;	//막대 너비
-			int maxY = 200;		//y축 최대값
+			int maxY = 350;		//y축 최대값
 			
 			List<String> xStr = new ArrayList<String>();		//x축 범례
 			List<Integer> yStr = new ArrayList<Integer>();		//y축 범례
